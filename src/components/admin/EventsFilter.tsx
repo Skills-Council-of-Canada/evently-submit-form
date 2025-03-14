@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar as CalendarIcon, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { getAllSchools, School } from "@/services/schoolService";
 
 interface EventsFilterProps {
   onSearch: (query: string) => void;
@@ -30,14 +31,6 @@ const statuses = [
   { value: "published", label: "Published" },
 ];
 
-// This would ideally come from an API call to get all schools
-const schools = [
-  { value: "Elm Street Public School", label: "Elm Street Public School" },
-  { value: "Oakridge Secondary School", label: "Oakridge Secondary School" },
-  { value: "Pine Valley Middle School", label: "Pine Valley Middle School" },
-  { value: "Maple Heights Academy", label: "Maple Heights Academy" },
-];
-
 export function EventsFilter({
   onSearch,
   onSchoolFilter,
@@ -49,7 +42,26 @@ export function EventsFilter({
   selectedStatus,
   dateRange,
 }: EventsFilterProps) {
+  const [schools, setSchools] = useState<School[]>([]);
+  const [isLoadingSchools, setIsLoadingSchools] = useState(false);
   const hasActiveFilters = searchQuery || selectedSchool || selectedStatus || dateRange.from || dateRange.to;
+
+  // Fetch schools from Supabase when component mounts
+  useEffect(() => {
+    const fetchSchools = async () => {
+      setIsLoadingSchools(true);
+      try {
+        const schoolsData = await getAllSchools();
+        setSchools(schoolsData);
+      } catch (error) {
+        console.error("Error fetching schools:", error);
+      } finally {
+        setIsLoadingSchools(false);
+      }
+    };
+
+    fetchSchools();
+  }, []);
 
   return (
     <div className="space-y-4">
@@ -84,11 +96,15 @@ export function EventsFilter({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="">All Schools</SelectItem>
-            {schools.map((school) => (
-              <SelectItem key={school.value} value={school.value}>
-                {school.label}
-              </SelectItem>
-            ))}
+            {isLoadingSchools ? (
+              <SelectItem value="loading" disabled>Loading schools...</SelectItem>
+            ) : (
+              schools.map((school) => (
+                <SelectItem key={school.id} value={school.school_name}>
+                  {school.school_name}
+                </SelectItem>
+              ))
+            )}
           </SelectContent>
         </Select>
 
