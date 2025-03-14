@@ -20,7 +20,9 @@ const EventForm = () => {
     submissionError,
     handleImageChange,
     onSubmit,
-    handleReset
+    handleReset,
+    schools,
+    isLoadingSchools
   } = useEventForm();
 
   return (
@@ -34,7 +36,11 @@ const EventForm = () => {
 
             <EventDetailsSection form={form} />
             
-            <ContactInfoSection form={form} />
+            <ContactInfoSection 
+              form={form} 
+              schools={schools}
+              isLoadingSchools={isLoadingSchools}
+            />
             
             <EventImageSection 
               form={form} 

@@ -2,10 +2,18 @@
 import React from "react";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
 import { FormValues } from "../schema";
+import { School } from "@/services/schoolService";
 
-export const ContactInfoSection = ({ form }: { form: UseFormReturn<FormValues> }) => {
+interface ContactInfoSectionProps {
+  form: UseFormReturn<FormValues>;
+  schools: School[];
+  isLoadingSchools: boolean;
+}
+
+export const ContactInfoSection = ({ form, schools, isLoadingSchools }: ContactInfoSectionProps) => {
   return (
     <div className="form-section">
       <h2 className="form-subtitle">School & Contact Information</h2>
@@ -20,7 +28,25 @@ export const ContactInfoSection = ({ form }: { form: UseFormReturn<FormValues> }
                 School Name *
               </FormLabel>
               <FormControl>
-                <Input placeholder="Washington High School" {...field} />
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a school" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {isLoadingSchools ? (
+                      <SelectItem value="loading" disabled>Loading schools...</SelectItem>
+                    ) : (
+                      schools.map((school) => (
+                        <SelectItem key={school.id} value={school.school_name}>
+                          {school.school_name}
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>
