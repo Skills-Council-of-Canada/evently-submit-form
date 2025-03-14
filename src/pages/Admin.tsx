@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { EventsTable } from "@/components/admin/EventsTable";
 import { EventsFilter } from "@/components/admin/EventsFilter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,8 +30,15 @@ const AdminDashboard = () => {
     if (path.includes("/admin/schools")) return "schools";
     if (path.includes("/admin/users")) return "users";
     if (path.includes("/admin/events")) return "events";
+    if (path.includes("/admin/settings")) return "settings";
     return "dashboard"; // Default to dashboard for /admin
   };
+
+  useEffect(() => {
+    // Ensure the component updates when path changes
+    console.log("Current path:", location.pathname);
+    console.log("Active tab:", getActiveTab());
+  }, [location.pathname]);
 
   // Handle tab change
   const handleTabChange = (value: string) => {
@@ -44,6 +51,9 @@ const AdminDashboard = () => {
         break;
       case "events":
         navigate("/admin/events");
+        break;
+      case "settings":
+        navigate("/admin/settings");
         break;
       case "dashboard":
       default:
@@ -75,6 +85,8 @@ const AdminDashboard = () => {
     setDateRange({ from: undefined, to: undefined });
   };
 
+  const activeTab = getActiveTab();
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -86,12 +98,13 @@ const AdminDashboard = () => {
               <ThemeToggle />
             </div>
 
-            <Tabs defaultValue={getActiveTab()} value={getActiveTab()} onValueChange={handleTabChange} className="mb-6">
+            <Tabs value={activeTab} onValueChange={handleTabChange} className="mb-6">
               <TabsList>
                 <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
                 <TabsTrigger value="events">Events</TabsTrigger>
                 <TabsTrigger value="schools">Schools</TabsTrigger>
                 <TabsTrigger value="users">Users</TabsTrigger>
+                <TabsTrigger value="settings">Settings</TabsTrigger>
               </TabsList>
 
               <TabsContent value="dashboard" className="mt-4">
@@ -168,6 +181,22 @@ const AdminDashboard = () => {
                   <CardContent>
                     <p className="text-muted-foreground">
                       User management functionality coming soon...
+                    </p>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="settings" className="mt-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>System Settings</CardTitle>
+                    <CardDescription>
+                      Manage application settings
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">
+                      Settings functionality coming soon...
                     </p>
                   </CardContent>
                 </Card>

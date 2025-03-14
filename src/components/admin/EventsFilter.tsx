@@ -52,7 +52,7 @@ export function EventsFilter({
       setIsLoadingSchools(true);
       try {
         const schoolsData = await getAllSchools();
-        setSchools(schoolsData);
+        setSchools(schoolsData.filter(school => school.school_name.trim() !== ""));
       } catch (error) {
         console.error("Error fetching schools:", error);
       } finally {
@@ -88,35 +88,37 @@ export function EventsFilter({
         </div>
 
         <Select
-          value={selectedSchool || ""}
-          onValueChange={(value) => onSchoolFilter(value || null)}
+          value={selectedSchool || "all"}
+          onValueChange={(value) => onSchoolFilter(value === "all" ? null : value)}
         >
           <SelectTrigger className="w-full md:w-[200px]">
             <SelectValue placeholder="School" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Schools</SelectItem>
+            <SelectItem value="all">All Schools</SelectItem>
             {isLoadingSchools ? (
               <SelectItem value="loading" disabled>Loading schools...</SelectItem>
             ) : (
-              schools.map((school) => (
-                <SelectItem key={school.id} value={school.school_name}>
-                  {school.school_name}
-                </SelectItem>
-              ))
+              schools
+                .filter(school => school.school_name.trim() !== "")
+                .map((school) => (
+                  <SelectItem key={school.id} value={school.school_name}>
+                    {school.school_name}
+                  </SelectItem>
+                ))
             )}
           </SelectContent>
         </Select>
 
         <Select
-          value={selectedStatus || ""}
-          onValueChange={(value) => onStatusFilter(value || null)}
+          value={selectedStatus || "all"}
+          onValueChange={(value) => onStatusFilter(value === "all" ? null : value)}
         >
           <SelectTrigger className="w-full md:w-[180px]">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Statuses</SelectItem>
+            <SelectItem value="all">All Statuses</SelectItem>
             {statuses.map((status) => (
               <SelectItem key={status.value} value={status.value}>
                 {status.label}
