@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { 
   Calendar, 
   Grid3X3, 
@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/sidebar";
 
 export function AdminSidebar() {
+  const location = useLocation();
+  
   const mainMenuItems = [
     {
       title: "Dashboard",
@@ -61,6 +63,13 @@ export function AdminSidebar() {
     },
   ];
 
+  const isActive = (path: string) => {
+    if (path === "/admin" && location.pathname === "/admin") {
+      return true;
+    }
+    return location.pathname.startsWith(path) && path !== "/admin";
+  };
+
   return (
     <Sidebar className="border-r">
       <SidebarHeader className="flex h-14 items-center border-b px-4">
@@ -83,7 +92,7 @@ export function AdminSidebar() {
             <SidebarMenu>
               {mainMenuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild active={isActive(item.url)}>
                     <Link to={item.url} className="flex items-center gap-2">
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
@@ -101,7 +110,7 @@ export function AdminSidebar() {
             <SidebarMenu>
               {secondaryMenuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild active={isActive(item.url)}>
                     <Link to={item.url} className="flex items-center gap-2">
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
