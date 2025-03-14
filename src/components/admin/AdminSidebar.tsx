@@ -62,7 +62,7 @@ export function AdminSidebar() {
   ];
 
   return (
-    <Sidebar>
+    <Sidebar className="border-r">
       <SidebarHeader className="flex h-14 items-center border-b px-4">
         <Link 
           to="/admin" 
