@@ -39,8 +39,8 @@ export const ContactInfoSection = ({ form, schools, isLoadingSchools }: ContactI
                     {isLoadingSchools ? (
                       <SelectItem value="loading" disabled>Loading schools...</SelectItem>
                     ) : (
-                      schools.map((school) => (
-                        <SelectItem key={school.id} value={school.school_name}>
+                      (schools || []).map((school) => (
+                        <SelectItem key={school.id || school.school_name} value={school.school_name}>
                           {school.school_name}
                         </SelectItem>
                       ))
