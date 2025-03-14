@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { Check, Edit, Trash2, AlertTriangle, Calendar, Building, Users, Eye } from "lucide-react";
+import { Check, Edit, Trash2, AlertTriangle, Calendar, Building, Users, Eye, FileText } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -23,15 +22,15 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
-// Import from the refactored service
+import { Link } from "react-router-dom";
 import { EventRecord } from "@/services/airtableService";
 
 interface ExtendedEventRecord extends EventRecord {
   id: string;
   status: "pending" | "approved" | "published";
+  contentGenerated?: boolean;
 }
 
-// This would be fetched from your API
 const mockEvents: ExtendedEventRecord[] = [
   {
     id: "1",
@@ -44,6 +43,7 @@ const mockEvents: ExtendedEventRecord[] = [
     contactEmail: "jane.smith@pdsb.org",
     audienceType: "Parents and Students",
     status: "pending",
+    contentGenerated: true
   },
   {
     id: "2",
@@ -56,6 +56,7 @@ const mockEvents: ExtendedEventRecord[] = [
     contactEmail: "john.doe@pdsb.org",
     audienceType: "Community",
     status: "approved",
+    contentGenerated: false
   },
   {
     id: "3",
@@ -120,16 +121,13 @@ export function EventsTable({
   const eventsPerPage = 5;
   const { toast } = useToast();
 
-  // In a real application, this would be an API call
   useEffect(() => {
     setEvents(mockEvents);
   }, []);
 
-  // Apply filters
   useEffect(() => {
     let filtered = [...events];
 
-    // Search query filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
@@ -141,17 +139,14 @@ export function EventsTable({
       );
     }
 
-    // School filter
     if (selectedSchool) {
       filtered = filtered.filter((event) => event.schoolName === selectedSchool);
     }
 
-    // Status filter
     if (selectedStatus) {
       filtered = filtered.filter((event) => event.status === selectedStatus);
     }
 
-    // Date range filter
     if (dateRange.from) {
       filtered = filtered.filter(
         (event) => new Date(event.eventDate) >= new Date(dateRange.from!)
@@ -168,14 +163,12 @@ export function EventsTable({
     setCurrentPage(1);
   }, [events, searchQuery, selectedSchool, selectedStatus, dateRange]);
 
-  // Get current events
   const indexOfLastEvent = currentPage * eventsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
   const currentEvents = filteredEvents.slice(indexOfFirstEvent, indexOfLastEvent);
   const totalPages = Math.ceil(filteredEvents.length / eventsPerPage);
 
   const handleDelete = (eventId: string) => {
-    // This would be an API call in a real application
     setEvents(events.filter((event) => event.id !== eventId));
     setDeleteDialogOpen(false);
     toast({
@@ -185,7 +178,6 @@ export function EventsTable({
   };
 
   const handleApprove = (eventId: string) => {
-    // This would be an API call in a real application
     setEvents(
       events.map((event) =>
         event.id === eventId ? { ...event, status: "approved" as const } : event
@@ -198,7 +190,6 @@ export function EventsTable({
   };
 
   const handlePublish = (eventId: string) => {
-    // This would be an API call in a real application
     setEvents(
       events.map((event) =>
         event.id === eventId ? { ...event, status: "published" as const } : event
@@ -265,6 +256,20 @@ export function EventsTable({
                         <Eye className="h-4 w-4" />
                         <span className="sr-only">View details</span>
                       </Button>
+                      
+                      {event.contentGenerated && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-blue-500 hover:text-blue-700"
+                          asChild
+                        >
+                          <Link to={`/content-review/${event.id}`}>
+                            <FileText className="h-4 w-4" />
+                            <span className="sr-only">Review Content</span>
+                          </Link>
+                        </Button>
+                      )}
                       
                       {event.status === "pending" && (
                         <Button

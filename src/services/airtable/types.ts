@@ -14,6 +14,7 @@ export interface EventRecord {
 
 // Define structure for content templates that Make.com will create
 export interface ContentTemplate {
+  id: string;
   sourceEventId: string;
   socialMediaPost: string;
   pressRelease: string;
