@@ -34,17 +34,17 @@ export function AdminSidebar() {
     {
       title: "Events",
       icon: Calendar,
-      url: "/admin",
+      url: "/admin/events",
     },
     {
       title: "Schools",
       icon: School,
-      url: "/admin",
+      url: "/admin/schools",
     },
     {
       title: "Users",
       icon: Users,
-      url: "/admin",
+      url: "/admin/users",
     },
   ];
 
