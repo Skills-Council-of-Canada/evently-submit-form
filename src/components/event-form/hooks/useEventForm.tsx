@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "@/hooks/use-toast";
 import { submitEventToAirtable, checkEventExists, EventRecord } from "@/services/airtableService";
-import { formSchema, FormValues } from "../FormSections";
+import { formSchema, FormValues } from "../schema";
 
 export function useEventForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);

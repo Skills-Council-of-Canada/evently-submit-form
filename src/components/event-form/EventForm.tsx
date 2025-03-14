@@ -5,7 +5,7 @@ import {
   EventDetailsSection, 
   ContactInfoSection, 
   EventImageSection 
-} from "./FormSections";
+} from "./sections";
 import SuccessMessage from "./SuccessMessage";
 import FormHeader from "./FormHeader";
 import SubmitButton from "./SubmitButton";
@@ -32,11 +32,7 @@ const EventForm = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormHeader submissionError={submissionError} />
 
-            <EventDetailsSection 
-              form={form} 
-              handleImageChange={handleImageChange} 
-              previewImage={previewImage} 
-            />
+            <EventDetailsSection form={form} />
             
             <ContactInfoSection form={form} />
             
