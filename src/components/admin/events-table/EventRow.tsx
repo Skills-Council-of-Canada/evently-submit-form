@@ -2,17 +2,9 @@
 import React from "react";
 import { format } from "date-fns";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { ExtendedEventRecord } from "./types";
+import { EventRowProps } from "./types";
 import { StatusBadge } from "./StatusBadge";
 import { EventActions } from "./EventActions";
-
-interface EventRowProps {
-  event: ExtendedEventRecord;
-  onViewDetails: (event: ExtendedEventRecord) => void;
-  onApprove: (eventId: string) => void;
-  onPublish: (eventId: string) => void;
-  onDelete: (eventId: string) => void;
-}
 
 export function EventRow({
   event,

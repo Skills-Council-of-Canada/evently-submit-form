@@ -9,12 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-
-interface DeleteEventDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onConfirmDelete: () => void;
-}
+import { DeleteEventDialogProps } from "./types";
 
 export function DeleteEventDialog({ open, onOpenChange, onConfirmDelete }: DeleteEventDialogProps) {
   return (

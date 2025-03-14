@@ -16,3 +16,33 @@ export interface EventsTableProps {
     to: Date | undefined;
   };
 }
+
+export interface EventRowProps {
+  event: ExtendedEventRecord;
+  onViewDetails: (event: ExtendedEventRecord) => void;
+  onApprove: (eventId: string) => void;
+  onPublish: (eventId: string) => void;
+  onDelete: (eventId: string) => void;
+}
+
+export interface EventActionsProps {
+  event: ExtendedEventRecord;
+  onViewDetails: () => void;
+  onApprove: (eventId: string) => void;
+  onPublish: (eventId: string) => void;
+  onDelete: (eventId: string) => void;
+}
+
+export interface EventDetailsSheetProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  event: ExtendedEventRecord | null;
+  onApprove: (eventId: string) => void;
+  onPublish: (eventId: string) => void;
+}
+
+export interface DeleteEventDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onConfirmDelete: () => void;
+}

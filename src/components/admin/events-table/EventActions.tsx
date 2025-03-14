@@ -4,15 +4,7 @@ import { Link } from "react-router-dom";
 import { Eye, FileText, Check, Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DeleteEventDialog } from "./DeleteEventDialog";
-import { ExtendedEventRecord } from "./types";
-
-interface EventActionsProps {
-  event: ExtendedEventRecord;
-  onViewDetails: () => void;
-  onApprove: (eventId: string) => void;
-  onPublish: (eventId: string) => void;
-  onDelete: (eventId: string) => void;
-}
+import { EventActionsProps } from "./types";
 
 export function EventActions({
   event,

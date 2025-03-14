@@ -10,16 +10,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ExtendedEventRecord } from "./types";
+import { EventDetailsSheetProps } from "./types";
 import { StatusBadge } from "./StatusBadge";
-
-interface EventDetailsSheetProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  event: ExtendedEventRecord | null;
-  onApprove: (eventId: string) => void;
-  onPublish: (eventId: string) => void;
-}
 
 export function EventDetailsSheet({
   open,
