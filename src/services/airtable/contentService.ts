@@ -1,4 +1,3 @@
-
 import { toast } from "@/hooks/use-toast";
 import { AIRTABLE_API_KEY, AIRTABLE_BASE_ID, AIRTABLE_CONTENT_TABLE } from "./config";
 import { ContentTemplate, EventRecord } from "./types";
@@ -215,6 +214,45 @@ export const updateContentTemplate = async (
       description: "There was a problem updating the content. Please try again.",
       variant: "destructive",
     });
+    return false;
+  }
+};
+
+/**
+ * Update content approval status
+ */
+export const updateContentApproval = async (
+  templateId: string,
+  status: 'approved' | 'rejected',
+  reviewerNotes: string = ""
+): Promise<boolean> => {
+  try {
+    // Update the content template status
+    const response = await fetch(
+      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_CONTENT_TABLE)}/${templateId}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fields: {
+            "Status": status,
+            "Reviewer Notes": reviewerNotes,
+            ...(status === 'approved' ? { "Approved Date": new Date().toISOString() } : {})
+          }
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Airtable API error: ${response.status}`);
+    }
+    
+    return true;
+  } catch (error) {
+    console.error(`Error ${status === 'approved' ? 'approving' : 'rejecting'} content:`, error);
     return false;
   }
 };
