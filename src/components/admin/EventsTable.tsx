@@ -23,7 +23,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
-// You would replace this with your actual API service
+// Import from the refactored service
 import { EventRecord } from "@/services/airtableService";
 
 interface ExtendedEventRecord extends EventRecord {

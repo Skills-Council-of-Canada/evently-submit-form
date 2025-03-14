@@ -1,13 +1,11 @@
-
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { Loader2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { EventRecord } from "@/services/airtableService";
 
-// Airtable configuration
-const AIRTABLE_API_KEY = "YOUR_AIRTABLE_API_KEY"; // Replace with your Airtable API key
-const AIRTABLE_BASE_ID = "YOUR_AIRTABLE_BASE_ID"; // Replace with your Airtable base ID
-const AIRTABLE_TABLE_NAME = "Event Submissions";
+// Airtable configuration imports
+import { AIRTABLE_API_KEY, AIRTABLE_BASE_ID, AIRTABLE_TABLE_NAME } from "@/services/airtable/config";
 
 interface Event {
   id: string;
