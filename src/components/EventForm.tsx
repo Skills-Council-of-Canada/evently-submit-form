@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -35,8 +34,12 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { 
+  submitEventToAirtable, 
+  checkEventExists, 
+  EventRecord 
+} from "@/services/airtableService";
 
-// Define the form schema with validation
 const formSchema = z.object({
   eventName: z.string().min(3, {
     message: "Event name must be at least 3 characters.",
@@ -64,7 +67,6 @@ const formSchema = z.object({
   audienceType: z.string({
     required_error: "Please select an audience type.",
   }),
-  // Image is optional
   eventImage: z.instanceof(FileList).optional(),
 });
 
@@ -74,8 +76,8 @@ const EventForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
 
-  // Initialize the form
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -88,7 +90,6 @@ const EventForm = () => {
     },
   });
 
-  // Handle image preview
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -102,28 +103,45 @@ const EventForm = () => {
     }
   };
 
-  // Handle form submission
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
+    setSubmissionError(null);
     
     try {
-      // Simulate API call with timeout
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const isDuplicate = await checkEventExists(
+        data.eventName,
+        data.eventDate,
+        data.schoolName
+      );
       
-      console.log("Form submitted:", data);
+      if (isDuplicate) {
+        setSubmissionError("An event with the same name, date, and school already exists. Please check your submission.");
+        toast({
+          title: "Duplicate Event",
+          description: "This event appears to already exist in our database.",
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
+        return;
+      }
       
-      // Show success state and toast
-      setIsSuccess(true);
-      toast({
-        title: "Event Submitted!",
-        description: "Your event has been successfully submitted for review.",
-      });
+      const recordId = await submitEventToAirtable(data as EventRecord);
       
-      // Reset form after success
-      form.reset();
-      setPreviewImage(null);
+      if (recordId) {
+        setIsSuccess(true);
+        toast({
+          title: "Event Submitted!",
+          description: "Your event has been successfully added to our database.",
+        });
+        
+        form.reset();
+        setPreviewImage(null);
+      } else {
+        throw new Error("Failed to save event to database");
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
+      setSubmissionError("There was a problem submitting your event. Please try again.");
       toast({
         title: "Submission Error",
         description: "There was a problem submitting your event. Please try again.",
@@ -134,9 +152,9 @@ const EventForm = () => {
     }
   };
 
-  // Reset the form to try again after success
   const handleReset = () => {
     setIsSuccess(false);
+    setSubmissionError(null);
     form.reset();
     setPreviewImage(null);
   };
@@ -183,6 +201,13 @@ const EventForm = () => {
                 Please complete all required fields marked with an asterisk (*). Be sure to review your information before submitting.
               </AlertDescription>
             </Alert>
+
+            {submissionError && (
+              <Alert variant="destructive" className="mb-6">
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{submissionError}</AlertDescription>
+              </Alert>
+            )}
 
             <div className="form-section">
               <h2 className="form-subtitle">Event Details</h2>
