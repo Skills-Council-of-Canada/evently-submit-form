@@ -41,15 +41,18 @@ export function useEventForm() {
 
   // Fetch schools from Supabase when component mounts
   useEffect(() => {
-    const fetchSchools = async () => {
+    async function fetchSchools() {
       setIsLoadingSchools(true);
       try {
         console.log("Fetching schools...");
         const schoolsData = await getAllSchools();
-        console.log("Schools fetched:", schoolsData.length);
-        setSchools(schoolsData);
+        console.log("Schools fetched:", schoolsData ? schoolsData.length : 0);
         
-        if (schoolsData.length === 0) {
+        // Ensure we always have an array
+        const validSchoolsData = Array.isArray(schoolsData) ? schoolsData : [];
+        setSchools(validSchoolsData);
+        
+        if (validSchoolsData.length === 0) {
           console.warn("No schools were fetched from the database");
           toast({
             title: "Warning",
@@ -59,15 +62,16 @@ export function useEventForm() {
         }
       } catch (error) {
         console.error("Error fetching schools:", error);
+        setSchools([]); // Set to empty array on error
         toast({
           title: "Error",
-          description: "Failed to load schools. Please refresh the page and try again.",
+          description: "Failed to load schools. Please refresh and try again.",
           variant: "destructive",
         });
       } finally {
         setIsLoadingSchools(false);
       }
-    };
+    }
 
     fetchSchools();
   }, [toast]);

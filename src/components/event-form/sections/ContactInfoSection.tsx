@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
@@ -15,14 +15,9 @@ interface ContactInfoSectionProps {
 
 export const ContactInfoSection = ({ form, schools, isLoadingSchools }: ContactInfoSectionProps) => {
   const [selectedSchoolInfo, setSelectedSchoolInfo] = useState<School | null>(null);
-  const [debugMessage, setDebugMessage] = useState<string>("");
-
-  // Log schools data when it changes for debugging
-  useEffect(() => {
-    console.log("Schools data:", schools);
-    console.log("Loading state:", isLoadingSchools);
-    setDebugMessage(`Schools loaded: ${schools.length}`);
-  }, [schools, isLoadingSchools]);
+  
+  // Ensure schools is always an array
+  const safeSchools = Array.isArray(schools) ? schools : [];
 
   return (
     <div className="form-section">
@@ -41,13 +36,13 @@ export const ContactInfoSection = ({ form, schools, isLoadingSchools }: ContactI
                 <SearchableSchoolSelect
                   value={field.value}
                   onChange={field.onChange}
-                  schools={schools}
+                  schools={safeSchools}
                   isLoading={isLoadingSchools}
                   onSchoolSelect={setSelectedSchoolInfo}
                 />
                 <FormMessage />
-                {debugMessage && (
-                  <p className="text-xs text-muted-foreground mt-1">{debugMessage}</p>
+                {safeSchools.length === 0 && !isLoadingSchools && (
+                  <p className="text-xs text-muted-foreground mt-1">No schools available</p>
                 )}
               </FormItem>
             )}

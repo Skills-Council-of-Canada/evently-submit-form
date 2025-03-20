@@ -20,31 +20,35 @@ interface SearchableSchoolSelectProps {
 export function SearchableSchoolSelect({
   value,
   onChange,
-  schools,
+  schools = [], // Default to empty array to avoid undefined errors
   isLoading,
   onSchoolSelect
 }: SearchableSchoolSelectProps) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   
+  // Make sure schools is always an array
+  const safeSchools = Array.isArray(schools) ? schools : [];
+  
   // Find the selected school object based on the school name value
-  const selectedSchool = schools && schools.length > 0 
-    ? schools.find(school => school.school_name === value) 
+  const selectedSchool = safeSchools.length > 0 
+    ? safeSchools.find(school => school.school_name === value) 
     : null;
   
-  // Filter schools based on search query - ensure schools is defined
-  const filteredSchools = schools && schools.length > 0
-    ? schools
+  // Filter schools based on search query
+  const filteredSchools = safeSchools.length > 0
+    ? safeSchools
         .filter(school => 
           school && 
           school.school_name && 
+          typeof school.school_name === 'string' &&
           school.school_name.trim() !== "" &&
           (searchQuery === "" || 
           school.school_name.toLowerCase().includes(searchQuery.toLowerCase()))
         )
         .sort((a, b) => a.school_name.localeCompare(b.school_name))
     : [];
-  
+
   // When a school is selected, trigger the callback
   useEffect(() => {
     if (onSchoolSelect) {
@@ -63,9 +67,6 @@ export function SearchableSchoolSelect({
     return <Skeleton className="h-10 w-full" />;
   }
 
-  // Safely check if schools exist
-  const hasSchools = Array.isArray(schools) && schools.length > 0;
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -75,9 +76,9 @@ export function SearchableSchoolSelect({
             role="combobox"
             aria-expanded={open}
             className="w-full justify-between"
-            type="button"
+            type="button" // Prevent form submission
             onClick={(e) => {
-              e.preventDefault(); // Prevent form submission
+              e.preventDefault(); // Prevent any default behavior
               setOpen(!open);
             }}
           >
@@ -87,7 +88,7 @@ export function SearchableSchoolSelect({
         </FormControl>
       </PopoverTrigger>
       <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
-        <Command shouldFilter={false}>
+        <Command shouldFilter={false}> {/* Disable internal filtering */}
           <div className="flex items-center border-b px-3">
             <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
             <CommandInput 
@@ -97,12 +98,14 @@ export function SearchableSchoolSelect({
               className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground focus:outline-none"
             />
           </div>
-          <CommandEmpty>No schools found matching "{searchQuery}"</CommandEmpty>
+          {searchQuery && filteredSchools.length === 0 && (
+            <CommandEmpty>No schools found matching "{searchQuery}"</CommandEmpty>
+          )}
           <CommandGroup className="max-h-[300px] overflow-y-auto">
-            {!hasSchools ? (
+            {safeSchools.length === 0 ? (
               <CommandItem disabled>No schools available</CommandItem>
-            ) : filteredSchools.length === 0 ? (
-              <CommandItem disabled>No schools found</CommandItem>
+            ) : filteredSchools.length === 0 && !searchQuery ? (
+              <CommandItem disabled>Type to search schools</CommandItem>
             ) : (
               filteredSchools.map((school) => (
                 <CommandItem
