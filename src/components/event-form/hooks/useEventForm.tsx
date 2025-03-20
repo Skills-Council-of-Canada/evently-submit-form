@@ -4,13 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { formSchema, FormValues } from "../schema";
 import { useImageUpload } from "./useImageUpload";
 import { useFormSubmission } from "./useFormSubmission";
-import { useState, useEffect } from "react";
-import { getAllSchools, School } from "@/services/schoolService";
+import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 export function useEventForm() {
-  const [schools, setSchools] = useState<School[]>([]);
-  const [isLoadingSchools, setIsLoadingSchools] = useState(true);
   const { toast } = useToast();
   
   const form = useForm<FormValues>({
@@ -39,43 +36,6 @@ export function useEventForm() {
     resetSubmission 
   } = useFormSubmission();
 
-  // Fetch schools from Supabase when component mounts
-  useEffect(() => {
-    async function fetchSchools() {
-      setIsLoadingSchools(true);
-      try {
-        console.log("Fetching schools...");
-        const schoolsData = await getAllSchools();
-        console.log("Schools fetched:", schoolsData ? schoolsData.length : 0);
-        
-        // Ensure we always have an array
-        const validSchoolsData = Array.isArray(schoolsData) ? schoolsData : [];
-        setSchools(validSchoolsData);
-        
-        if (validSchoolsData.length === 0) {
-          console.warn("No schools were fetched from the database");
-          toast({
-            title: "Warning",
-            description: "Unable to load school list. Please try again later.",
-            variant: "destructive",
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching schools:", error);
-        setSchools([]); // Set to empty array on error
-        toast({
-          title: "Error",
-          description: "Failed to load schools. Please refresh and try again.",
-          variant: "destructive",
-        });
-      } finally {
-        setIsLoadingSchools(false);
-      }
-    }
-
-    fetchSchools();
-  }, [toast]);
-
   const onSubmit = async (data: FormValues) => {
     const recordId = await submitForm(data);
     
@@ -99,8 +59,6 @@ export function useEventForm() {
     submissionError,
     handleImageChange,
     onSubmit,
-    handleReset,
-    schools,
-    isLoadingSchools
+    handleReset
   };
 }
