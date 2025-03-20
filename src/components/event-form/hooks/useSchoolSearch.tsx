@@ -17,7 +17,8 @@ export function useSchoolSearch() {
     setIsLoading(true);
     try {
       const results = await searchSchools(query);
-      setSchools(results);
+      // Ensure we always have a valid array, even if the API returns null/undefined
+      setSchools(results || []);
     } catch (error) {
       console.error("Error searching schools:", error);
       toast({
