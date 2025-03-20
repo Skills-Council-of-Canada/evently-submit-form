@@ -93,7 +93,13 @@ export function SearchableSchoolSelect({
           </Button>
         </FormControl>
       </PopoverTrigger>
-      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+      <PopoverContent 
+        className="w-[var(--radix-popover-trigger-width)] p-0" 
+        align="start"
+        sideOffset={5}
+        avoidCollisions
+        collisionPadding={20}
+      >
         {safeSchools.length > 0 && (
           <Command shouldFilter={false}>
             <div className="flex items-center border-b px-3">
