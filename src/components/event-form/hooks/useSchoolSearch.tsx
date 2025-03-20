@@ -1,7 +1,8 @@
 
 import { useState, useCallback } from "react";
-import { searchSchools, School } from "@/services/schoolService";
+import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { School } from "@/services/schoolService";
 
 export function useSchoolSearch() {
   const [schools, setSchools] = useState<School[]>([]);
@@ -16,8 +17,19 @@ export function useSchoolSearch() {
 
     setIsLoading(true);
     try {
-      const results = await searchSchools(query);
-      setSchools(Array.isArray(results) ? results : []);
+      // Direct Supabase query without going through an API
+      const { data, error } = await supabase
+        .from('schools')
+        .select('*')
+        .or(`school_name.ilike.%${query}%, school.ilike.%${query}%`)
+        .order('school_name', { ascending: true })
+        .limit(20); // Limiting results for better performance
+      
+      if (error) {
+        throw error;
+      }
+      
+      setSchools(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error searching schools:", error);
       toast({
