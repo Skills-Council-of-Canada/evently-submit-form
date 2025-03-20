@@ -2,11 +2,10 @@
 import React, { useState, useEffect } from "react";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
 import { FormValues } from "../schema";
 import { School } from "@/services/schoolService";
-import { Skeleton } from "@/components/ui/skeleton";
+import { SearchableSchoolSelect } from "../components/SearchableSchoolSelect";
 
 interface ContactInfoSectionProps {
   form: UseFormReturn<FormValues>;
@@ -25,17 +24,6 @@ export const ContactInfoSection = ({ form, schools, isLoadingSchools }: ContactI
     setDebugMessage(`Schools loaded: ${schools.length}`);
   }, [schools, isLoadingSchools]);
 
-  // Update school info when school name changes
-  useEffect(() => {
-    const currentSchoolName = form.watch("schoolName");
-    if (currentSchoolName && schools.length > 0) {
-      const school = schools.find(s => s.school_name === currentSchoolName);
-      setSelectedSchoolInfo(school || null);
-    } else {
-      setSelectedSchoolInfo(null);
-    }
-  }, [form.watch("schoolName"), schools]);
-
   return (
     <div className="form-section">
       <h2 className="form-subtitle">School & Contact Information</h2>
@@ -50,41 +38,13 @@ export const ContactInfoSection = ({ form, schools, isLoadingSchools }: ContactI
                 <FormLabel aria-required="true">
                   School Name *
                 </FormLabel>
-                <FormControl>
-                  {isLoadingSchools ? (
-                    <Skeleton className="h-10 w-full" />
-                  ) : (
-                    <Select
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        const school = schools.find(s => s.school_name === value);
-                        setSelectedSchoolInfo(school || null);
-                      }}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select a school" />
-                      </SelectTrigger>
-                      <SelectContent className="max-h-[300px]">
-                        {schools.length === 0 ? (
-                          <SelectItem value="no-schools" disabled>No schools available</SelectItem>
-                        ) : (
-                          schools
-                            .filter(school => school && school.school_name && school.school_name.trim() !== "")
-                            .sort((a, b) => a.school_name.localeCompare(b.school_name))
-                            .map((school) => (
-                              <SelectItem 
-                                key={school.id || school.school_name} 
-                                value={school.school_name}
-                              >
-                                {school.school_name}
-                              </SelectItem>
-                            ))
-                        )}
-                      </SelectContent>
-                    </Select>
-                  )}
-                </FormControl>
+                <SearchableSchoolSelect
+                  value={field.value}
+                  onChange={field.onChange}
+                  schools={schools}
+                  isLoading={isLoadingSchools}
+                  onSchoolSelect={setSelectedSchoolInfo}
+                />
                 <FormMessage />
                 {debugMessage && (
                   <p className="text-xs text-muted-foreground mt-1">{debugMessage}</p>
