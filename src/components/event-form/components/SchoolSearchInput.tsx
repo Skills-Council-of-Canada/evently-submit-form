@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getAllSchools } from "@/services/schoolService";
 import { School } from "@/services/schoolService";
+import { SearchableSchoolSelect } from "./SearchableSchoolSelect";
 
 interface SchoolSearchInputProps {
   value: string;
@@ -36,54 +37,13 @@ export function SchoolSearchInput({ value, onChange }: SchoolSearchInputProps) {
     fetchSchools();
   }, []);
 
-  const handleSelect = (schoolName: string) => {
-    onChange(schoolName);
-    setOpen(false);
-  };
-
+  // Using the more robust SearchableSchoolSelect component instead
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-full justify-between"
-          type="button"
-        >
-          {value ? value : "Select a school..."}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
-        {isLoading ? (
-          <div className="py-6 text-center text-sm">Loading schools...</div>
-        ) : (
-          <Command>
-            {schools.length > 0 ? (
-              <CommandGroup className="max-h-[300px] overflow-y-auto">
-                {schools.map((school) => (
-                  <CommandItem
-                    key={school.id || school.school_name}
-                    value={school.school_name}
-                    onSelect={() => handleSelect(school.school_name)}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        value === school.school_name ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-                    {school.school_name}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            ) : (
-              <CommandEmpty>No schools available</CommandEmpty>
-            )}
-          </Command>
-        )}
-      </PopoverContent>
-    </Popover>
+    <SearchableSchoolSelect
+      value={value}
+      onChange={onChange}
+      schools={schools}
+      isLoading={isLoading}
+    />
   );
 }
