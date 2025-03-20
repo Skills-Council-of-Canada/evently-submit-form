@@ -55,6 +55,9 @@ export function SchoolSearchInput({ value, onChange }: SchoolSearchInputProps) {
     onChange("");
   };
 
+  // Safety check to ensure schools is always an array
+  const safeSchools = Array.isArray(schools) ? schools : [];
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -97,9 +100,9 @@ export function SchoolSearchInput({ value, onChange }: SchoolSearchInputProps) {
           </div>
           {isLoading ? (
             <div className="py-6 text-center text-sm">Loading schools...</div>
-          ) : schools && schools.length > 0 ? (
+          ) : safeSchools.length > 0 ? (
             <CommandGroup className="max-h-[300px] overflow-y-auto">
-              {schools.map((school) => (
+              {safeSchools.map((school) => (
                 <CommandItem
                   key={school.id || school.school_name}
                   value={school.school_name}
