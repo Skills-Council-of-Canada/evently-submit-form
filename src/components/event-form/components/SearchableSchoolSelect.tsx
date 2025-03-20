@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Check, ChevronsUpDown, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { School } from "@/services/schoolService";
@@ -73,7 +72,19 @@ export function SearchableSchoolSelect({
         <FormControl>
           <div 
             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer flex items-center justify-between"
-            onClick={() => setOpen(!open)}
+            onClick={(e) => {
+              e.preventDefault(); // Prevent any navigation
+              e.stopPropagation(); // Stop event bubbling
+              setOpen(!open);
+            }}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setOpen(!open);
+              }
+            }}
           >
             <span className="truncate">
               {value ? value : "Start typing to search for a school..."}
@@ -83,47 +94,49 @@ export function SearchableSchoolSelect({
         </FormControl>
       </PopoverTrigger>
       <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
-        <Command shouldFilter={false}> {/* Disable internal filtering */}
-          <div className="flex items-center border-b px-3">
-            <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-            <CommandInput 
-              placeholder="Type to search schools..." 
-              value={searchQuery}
-              onValueChange={setSearchQuery}
-              className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground focus:outline-none"
-              autoFocus
-            />
-          </div>
-          {searchQuery && filteredSchools.length === 0 && (
-            <CommandEmpty>No schools found matching "{searchQuery}"</CommandEmpty>
-          )}
-          <CommandGroup className="max-h-[300px] overflow-y-auto">
-            {safeSchools.length === 0 ? (
-              <CommandItem disabled>No schools available</CommandItem>
-            ) : filteredSchools.length === 0 && !searchQuery ? (
-              <CommandItem disabled>Type to search schools</CommandItem>
-            ) : (
-              filteredSchools.map((school) => (
-                <CommandItem
-                  key={school.id || school.school_name}
-                  value={school.school_name}
-                  onSelect={(currentValue) => {
-                    onChange(currentValue);
-                    setOpen(false);
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === school.school_name ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {school.school_name}
-                </CommandItem>
-              ))
+        {safeSchools.length > 0 && (
+          <Command shouldFilter={false}> {/* Disable internal filtering */}
+            <div className="flex items-center border-b px-3">
+              <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+              <CommandInput 
+                placeholder="Type to search schools..." 
+                value={searchQuery}
+                onValueChange={setSearchQuery}
+                className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground focus:outline-none"
+                autoFocus
+              />
+            </div>
+            {searchQuery && filteredSchools.length === 0 && (
+              <CommandEmpty>No schools found matching "{searchQuery}"</CommandEmpty>
             )}
-          </CommandGroup>
-        </Command>
+            <CommandGroup className="max-h-[300px] overflow-y-auto">
+              {safeSchools.length === 0 ? (
+                <CommandItem disabled>No schools available</CommandItem>
+              ) : filteredSchools.length === 0 && !searchQuery ? (
+                <CommandItem disabled>Type to search schools</CommandItem>
+              ) : (
+                filteredSchools.map((school) => (
+                  <CommandItem
+                    key={school.id || school.school_name}
+                    value={school.school_name}
+                    onSelect={(currentValue) => {
+                      onChange(currentValue);
+                      setOpen(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        value === school.school_name ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {school.school_name}
+                  </CommandItem>
+                ))
+              )}
+            </CommandGroup>
+          </Command>
+        )}
       </PopoverContent>
     </Popover>
   );
