@@ -55,42 +55,6 @@ export function SchoolSearchInput({ value, onChange }: SchoolSearchInputProps) {
     onChange("");
   };
 
-  // Safely render the school list
-  const renderSchoolList = () => {
-    if (isLoading) {
-      return <div className="py-6 text-center text-sm">Loading schools...</div>;
-    }
-    
-    if (schools && schools.length > 0) {
-      return (
-        <CommandGroup className="max-h-[300px] overflow-y-auto">
-          {schools.map((school) => (
-            <CommandItem
-              key={school.id || school.school_name}
-              value={school.school_name}
-              onSelect={() => handleSelect(school.school_name)}
-              className="flex items-center"
-            >
-              <Check
-                className={cn(
-                  "mr-2 h-4 w-4",
-                  value === school.school_name ? "opacity-100" : "opacity-0"
-                )}
-              />
-              {school.school_name}
-            </CommandItem>
-          ))}
-        </CommandGroup>
-      );
-    }
-    
-    if (inputValue) {
-      return <CommandEmpty>No schools found matching "{inputValue}"</CommandEmpty>;
-    }
-    
-    return <div className="py-6 text-center text-sm">Type to search schools</div>;
-  };
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -131,7 +95,32 @@ export function SchoolSearchInput({ value, onChange }: SchoolSearchInputProps) {
               className="h-9"
             />
           </div>
-          {renderSchoolList()}
+          {isLoading ? (
+            <div className="py-6 text-center text-sm">Loading schools...</div>
+          ) : schools && schools.length > 0 ? (
+            <CommandGroup className="max-h-[300px] overflow-y-auto">
+              {schools.map((school) => (
+                <CommandItem
+                  key={school.id || school.school_name}
+                  value={school.school_name}
+                  onSelect={() => handleSelect(school.school_name)}
+                  className="flex items-center"
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      value === school.school_name ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  {school.school_name}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          ) : inputValue ? (
+            <CommandEmpty>No schools found matching "{inputValue}"</CommandEmpty>
+          ) : (
+            <div className="py-6 text-center text-sm">Type to search schools</div>
+          )}
         </Command>
       </PopoverContent>
     </Popover>
