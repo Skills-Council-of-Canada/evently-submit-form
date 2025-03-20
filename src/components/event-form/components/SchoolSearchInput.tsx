@@ -24,7 +24,7 @@ export function SchoolSearchInput({ value, onChange }: SchoolSearchInputProps) {
       setIsLoading(true);
       try {
         const fetchedSchools = await getAllSchools();
-        setSchools(fetchedSchools || []);
+        setSchools(Array.isArray(fetchedSchools) ? fetchedSchools : []);
       } catch (error) {
         console.error("Error fetching schools:", error);
         setSchools([]);
@@ -56,35 +56,33 @@ export function SchoolSearchInput({ value, onChange }: SchoolSearchInputProps) {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
-        <Command>
-          {isLoading ? (
-            <div className="py-6 text-center text-sm">Loading schools...</div>
-          ) : (
-            <>
-              {schools.length > 0 ? (
-                <CommandGroup className="max-h-[300px] overflow-y-auto">
-                  {schools.map((school) => (
-                    <CommandItem
-                      key={school.id || school.school_name}
-                      value={school.school_name}
-                      onSelect={() => handleSelect(school.school_name)}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          value === school.school_name ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                      {school.school_name}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              ) : (
-                <CommandEmpty>No schools available</CommandEmpty>
-              )}
-            </>
-          )}
-        </Command>
+        {isLoading ? (
+          <div className="py-6 text-center text-sm">Loading schools...</div>
+        ) : (
+          <Command>
+            {schools.length > 0 ? (
+              <CommandGroup className="max-h-[300px] overflow-y-auto">
+                {schools.map((school) => (
+                  <CommandItem
+                    key={school.id || school.school_name}
+                    value={school.school_name}
+                    onSelect={() => handleSelect(school.school_name)}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        value === school.school_name ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {school.school_name}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            ) : (
+              <CommandEmpty>No schools available</CommandEmpty>
+            )}
+          </Command>
+        )}
       </PopoverContent>
     </Popover>
   );
