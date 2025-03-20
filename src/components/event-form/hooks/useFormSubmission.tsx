@@ -1,8 +1,7 @@
 
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
-import { submitEventToAirtable, checkEventExists, EventRecord } from "@/services/airtableService";
-import { notifyNewEventSubmission } from "@/services/airtable/notificationService";
+import { submitEvent, checkEventExists, EventRecord } from "@/services/eventService";
 import { FormValues } from "../schema";
 
 export function useFormSubmission() {
@@ -32,16 +31,13 @@ export function useFormSubmission() {
         return null;
       }
       
-      const recordId = await submitEventToAirtable(data as EventRecord);
+      const recordId = await submitEvent(data as EventRecord);
       
       if (recordId) {
-        // Send notifications about the new event submission
-        await notifyNewEventSubmission(data as EventRecord, recordId);
-        
         setIsSuccess(true);
         toast({
           title: "Event Submitted!",
-          description: "Your event has been successfully added to our database and the communications team has been notified.",
+          description: "Your event has been successfully added to our database.",
         });
         return recordId;
       } else {

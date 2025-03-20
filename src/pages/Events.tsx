@@ -1,62 +1,20 @@
+
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { Loader2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { EventRecord } from "@/services/airtableService";
-
-// Airtable configuration imports
-import { AIRTABLE_API_KEY, AIRTABLE_BASE_ID, AIRTABLE_TABLE_NAME } from "@/services/airtable/config";
-
-interface Event {
-  id: string;
-  eventName: string;
-  eventDate: string;
-  eventTime: string;
-  description: string;
-  schoolName: string;
-  contactName: string;
-  contactEmail: string;
-  audienceType: string;
-}
+import { getAllEvents, EventRecord } from "@/services/eventService";
 
 const Events = () => {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<EventRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch(
-          `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`,
-          {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch events: ${response.status}`);
-        }
-
-        const data = await response.json();
-        
-        // Transform Airtable records to our Event interface
-        const formattedEvents = data.records.map((record: any) => ({
-          id: record.id,
-          eventName: record.fields["Event Name"] || "",
-          eventDate: record.fields["Event Date"] || "",
-          eventTime: record.fields["Event Time"] || "",
-          description: record.fields["Description"] || "",
-          schoolName: record.fields["School Name"] || "",
-          contactName: record.fields["Contact Name"] || "",
-          contactEmail: record.fields["Contact Email"] || "",
-          audienceType: record.fields["Audience Type"] || "",
-        }));
-
-        setEvents(formattedEvents);
+        const eventsData = await getAllEvents();
+        setEvents(eventsData);
       } catch (error) {
         console.error("Error fetching events:", error);
         setError("Failed to load events. Please try again later.");
@@ -108,7 +66,7 @@ const Events = () => {
                 <div className="mb-4">
                   <p className="text-sm font-medium text-gray-500">Date & Time</p>
                   <p className="text-gray-700">
-                    {event.eventDate && format(new Date(event.eventDate), "PPP")} at {event.eventTime}
+                    {format(new Date(event.eventDate), "PPP")} at {event.eventTime}
                   </p>
                 </div>
                 <div className="mb-4">
