@@ -12,6 +12,7 @@ export interface EventRecord {
   contactName: string;
   contactEmail: string;
   audienceType: string;
+  imageUrl?: string;
   status?: 'pending' | 'approved' | 'published';
   createdAt?: string;
 }
@@ -33,6 +34,7 @@ export const submitEvent = async (eventData: EventRecord): Promise<string | null
       contact_name: eventData.contactName,
       contact_email: eventData.contactEmail,
       audience_type: eventData.audienceType,
+      image_url: eventData.imageUrl || null,
       status: "pending" as 'pending', // Explicitly type as literal
       created_at: new Date().toISOString()
     };
@@ -120,6 +122,7 @@ export const getAllEvents = async (): Promise<EventRecord[]> => {
       contactName: record.contact_name,
       contactEmail: record.contact_email,
       audienceType: record.audience_type,
+      imageUrl: record.image_url || null,
       status: record.status || "pending",
       createdAt: record.created_at
     }));

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { Loader2 } from "lucide-react";
+import { Loader2, Calendar, Users, MapPin } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAllEvents, EventRecord } from "@/services/eventService";
 
@@ -55,27 +55,51 @@ const Events = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {events.map((event) => (
-            <Card key={event.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-              <CardHeader className="bg-event-purple text-white">
-                <CardTitle className="truncate">{event.eventName}</CardTitle>
-                <CardDescription className="text-white opacity-90">
+            <Card key={event.id} className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full">
+              {event.imageUrl && (
+                <div className="relative h-48 w-full">
+                  <img 
+                    src={event.imageUrl} 
+                    alt={event.eventName}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <CardHeader className={`${event.imageUrl ? 'bg-white' : 'bg-event-purple text-white'}`}>
+                <CardTitle className={`truncate ${event.imageUrl ? 'text-gray-800' : 'text-white'}`}>
+                  {event.eventName}
+                </CardTitle>
+                <CardDescription className={event.imageUrl ? 'text-gray-500' : 'text-white opacity-90'}>
                   {event.schoolName}
                 </CardDescription>
               </CardHeader>
-              <CardContent className="pt-6">
-                <div className="mb-4">
-                  <p className="text-sm font-medium text-gray-500">Date & Time</p>
-                  <p className="text-gray-700">
-                    {format(new Date(event.eventDate), "PPP")} at {event.eventTime}
-                  </p>
-                </div>
-                <div className="mb-4">
-                  <p className="text-sm font-medium text-gray-500">Description</p>
-                  <p className="text-gray-700 line-clamp-3">{event.description}</p>
-                </div>
-                <div className="mb-4">
-                  <p className="text-sm font-medium text-gray-500">Audience</p>
-                  <p className="text-gray-700 capitalize">{event.audienceType}</p>
+              <CardContent className="pt-6 flex-grow">
+                <div className="space-y-4">
+                  <div className="flex items-center">
+                    <Calendar className="h-5 w-5 text-event-purple mr-2" />
+                    <div>
+                      <p className="text-gray-700">
+                        {format(new Date(event.eventDate), "PPP")} at {event.eventTime}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start">
+                    <MapPin className="h-5 w-5 text-event-purple mr-2 mt-1" />
+                    <div>
+                      <p className="text-gray-700">{event.schoolName}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center">
+                    <Users className="h-5 w-5 text-event-purple mr-2" />
+                    <p className="text-gray-700 capitalize">{event.audienceType}</p>
+                  </div>
+                  
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 mb-1">Description</p>
+                    <p className="text-gray-700 line-clamp-3">{event.description}</p>
+                  </div>
                 </div>
               </CardContent>
               <CardFooter className="bg-gray-50 text-sm text-gray-500">

@@ -20,6 +20,7 @@ export type Database = {
           event_name: string
           event_time: string
           id: string
+          image_url: string | null
           school_name: string
           status: string
         }
@@ -33,6 +34,7 @@ export type Database = {
           event_name: string
           event_time: string
           id?: string
+          image_url?: string | null
           school_name: string
           status?: string
         }
@@ -46,6 +48,7 @@ export type Database = {
           event_name?: string
           event_time?: string
           id?: string
+          image_url?: string | null
           school_name?: string
           status?: string
         }

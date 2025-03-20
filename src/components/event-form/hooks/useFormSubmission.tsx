@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { submitEvent, checkEventExists, EventRecord } from "@/services/eventService";
+import { uploadEventImage } from "@/services/imageService";
 import { FormValues } from "../schema";
 
 export function useFormSubmission() {
@@ -14,6 +15,7 @@ export function useFormSubmission() {
     setSubmissionError(null);
     
     try {
+      // Check for duplicate event
       const isDuplicate = await checkEventExists(
         data.eventName,
         data.eventDate,
@@ -31,7 +33,21 @@ export function useFormSubmission() {
         return null;
       }
       
-      const recordId = await submitEvent(data as EventRecord);
+      // Handle image upload if an image was selected
+      let imageUrl = null;
+      if (data.eventImage && data.eventImage.length > 0) {
+        const imageFile = data.eventImage[0];
+        imageUrl = await uploadEventImage(imageFile);
+      }
+      
+      // Prepare event data including the image URL
+      const eventData: EventRecord = {
+        ...data,
+        imageUrl
+      };
+      
+      // Submit the event with image URL
+      const recordId = await submitEvent(eventData);
       
       if (recordId) {
         setIsSuccess(true);
