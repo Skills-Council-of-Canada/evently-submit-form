@@ -41,9 +41,17 @@ export function useFormSubmission() {
       }
       
       // Prepare event data including the image URL
+      // Fix: Explicitly cast the data as EventRecord type and add the imageUrl
       const eventData: EventRecord = {
-        ...data,
-        imageUrl
+        eventName: data.eventName,
+        eventDate: data.eventDate,
+        eventTime: data.eventTime,
+        description: data.description,
+        schoolName: data.schoolName,
+        contactName: data.contactName,
+        contactEmail: data.contactEmail,
+        audienceType: data.audienceType,
+        imageUrl: imageUrl
       };
       
       // Submit the event with image URL
