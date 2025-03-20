@@ -67,6 +67,13 @@ export function SearchableSchoolSelect({
     return <Skeleton className="h-10 w-full" />;
   }
 
+  // Handler to prevent any default behavior
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setOpen(!open);
+  };
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -77,7 +84,7 @@ export function SearchableSchoolSelect({
             type="button" // Important: prevents form submission
             aria-expanded={open}
             className="w-full justify-between font-normal"
-            onClick={() => setOpen(!open)}
+            onClick={handleButtonClick} // Use the new handler
           >
             <span className="truncate">
               {value ? value : "Start typing to search for a school..."}

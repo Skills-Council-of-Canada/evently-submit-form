@@ -1,10 +1,5 @@
 
 import React, { useState, useEffect } from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { Command, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { getAllSchools } from "@/services/schoolService";
 import { School } from "@/services/schoolService";
 import { SearchableSchoolSelect } from "./SearchableSchoolSelect";
@@ -15,7 +10,6 @@ interface SchoolSearchInputProps {
 }
 
 export function SchoolSearchInput({ value, onChange }: SchoolSearchInputProps) {
-  const [open, setOpen] = useState(false);
   const [schools, setSchools] = useState<School[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
@@ -37,7 +31,7 @@ export function SchoolSearchInput({ value, onChange }: SchoolSearchInputProps) {
     fetchSchools();
   }, []);
 
-  // Using the more robust SearchableSchoolSelect component instead
+  // Using the more robust SearchableSchoolSelect component
   return (
     <SearchableSchoolSelect
       value={value}
