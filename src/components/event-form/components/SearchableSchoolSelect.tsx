@@ -71,20 +71,15 @@ export function SearchableSchoolSelect({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <FormControl>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-full justify-between"
-            type="button" // Prevent form submission
-            onClick={(e) => {
-              e.preventDefault(); // Prevent any default behavior
-              setOpen(!open);
-            }}
+          <div 
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer flex items-center justify-between"
+            onClick={() => setOpen(!open)}
           >
-            {value ? value : "Start typing to search for a school..."}
+            <span className="truncate">
+              {value ? value : "Start typing to search for a school..."}
+            </span>
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
+          </div>
         </FormControl>
       </PopoverTrigger>
       <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
@@ -96,6 +91,7 @@ export function SearchableSchoolSelect({
               value={searchQuery}
               onValueChange={setSearchQuery}
               className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground focus:outline-none"
+              autoFocus
             />
           </div>
           {searchQuery && filteredSchools.length === 0 && (
