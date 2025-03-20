@@ -31,10 +31,14 @@ export const useEvents = ({
       try {
         const fetchedEvents = await getAllEvents();
         // Convert EventRecord[] to ExtendedEventRecord[]
-        const extendedEvents: ExtendedEventRecord[] = fetchedEvents.map(event => ({
-          ...event,
-          contentGenerated: Math.random() > 0.5 // Randomly set for demo purposes
-        }));
+        const extendedEvents: ExtendedEventRecord[] = fetchedEvents
+          .filter(event => event.id !== undefined) // Filter out any events without IDs
+          .map(event => ({
+            ...event,
+            id: event.id as string, // We know id exists because of the filter
+            status: event.status || "pending" as const,
+            contentGenerated: Math.random() > 0.5 // Randomly set for demo purposes
+          }));
         setEvents(extendedEvents);
       } catch (error) {
         console.error("Error fetching events:", error);

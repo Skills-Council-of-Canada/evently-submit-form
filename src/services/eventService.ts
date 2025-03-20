@@ -40,7 +40,7 @@ export const submitEvent = async (eventData: EventRecord): Promise<string | null
     // Insert the record into Supabase
     const { data, error } = await supabase
       .from('events')
-      .insert([eventRecord])
+      .insert(eventRecord)
       .select();
 
     if (error) {
@@ -51,7 +51,7 @@ export const submitEvent = async (eventData: EventRecord): Promise<string | null
     console.log("Event successfully submitted to Supabase:", data);
     
     // Return the ID of the created record
-    return data[0].id;
+    return data?.[0]?.id || null;
   } catch (error) {
     console.error("Error submitting to Supabase:", error);
     return null;
@@ -87,7 +87,7 @@ export const checkEventExists = async (
     }
 
     // If records are returned, it means a duplicate exists
-    return data.length > 0;
+    return data && data.length > 0;
   } catch (error) {
     console.error("Error checking for duplicate events:", error);
     return false; // Default to allowing submission in case of error
