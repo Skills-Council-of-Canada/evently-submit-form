@@ -9,57 +9,7 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      schools: {
-        Row: {
-          created_at: string
-          family: string | null
-          full_address: string | null
-          grades: string | null
-          id: string
-          municipality: string | null
-          panel: string | null
-          postal_code: string | null
-          school: string
-          school_name: string
-          school_type: string | null
-          street_name: string | null
-          street_number: string | null
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          family?: string | null
-          full_address?: string | null
-          grades?: string | null
-          id?: string
-          municipality?: string | null
-          panel?: string | null
-          postal_code?: string | null
-          school: string
-          school_name: string
-          school_type?: string | null
-          street_name?: string | null
-          street_number?: string | null
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          family?: string | null
-          full_address?: string | null
-          grades?: string | null
-          id?: string
-          municipality?: string | null
-          panel?: string | null
-          postal_code?: string | null
-          school?: string
-          school_name?: string
-          school_type?: string | null
-          street_name?: string | null
-          street_number?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
