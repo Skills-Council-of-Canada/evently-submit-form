@@ -28,18 +28,22 @@ export function SearchableSchoolSelect({
   const [searchQuery, setSearchQuery] = useState("");
   
   // Find the selected school object based on the school name value
-  const selectedSchool = schools.find(school => school.school_name === value);
+  const selectedSchool = schools && schools.length > 0 
+    ? schools.find(school => school.school_name === value) 
+    : null;
   
-  // Filter schools based on search query
-  const filteredSchools = schools
-    .filter(school => 
-      school && 
-      school.school_name && 
-      school.school_name.trim() !== "" &&
-      (searchQuery === "" || 
-       school.school_name.toLowerCase().includes(searchQuery.toLowerCase()))
-    )
-    .sort((a, b) => a.school_name.localeCompare(b.school_name));
+  // Filter schools based on search query - ensure schools is defined
+  const filteredSchools = schools && schools.length > 0
+    ? schools
+        .filter(school => 
+          school && 
+          school.school_name && 
+          school.school_name.trim() !== "" &&
+          (searchQuery === "" || 
+          school.school_name.toLowerCase().includes(searchQuery.toLowerCase()))
+        )
+        .sort((a, b) => a.school_name.localeCompare(b.school_name))
+    : [];
   
   // When a school is selected, trigger the callback
   useEffect(() => {
@@ -58,6 +62,9 @@ export function SearchableSchoolSelect({
   if (isLoading) {
     return <Skeleton className="h-10 w-full" />;
   }
+
+  // Safely check if schools exist
+  const hasSchools = Array.isArray(schools) && schools.length > 0;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -92,8 +99,10 @@ export function SearchableSchoolSelect({
           </div>
           <CommandEmpty>No schools found matching "{searchQuery}"</CommandEmpty>
           <CommandGroup className="max-h-[300px] overflow-y-auto">
-            {filteredSchools.length === 0 ? (
+            {!hasSchools ? (
               <CommandItem disabled>No schools available</CommandItem>
+            ) : filteredSchools.length === 0 ? (
+              <CommandItem disabled>No schools found</CommandItem>
             ) : (
               filteredSchools.map((school) => (
                 <CommandItem
