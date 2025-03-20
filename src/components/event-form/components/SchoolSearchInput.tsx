@@ -51,9 +51,7 @@ export function SchoolSearchInput({ value, onChange }: SchoolSearchInputProps) {
           className="w-full justify-between"
           type="button"
         >
-          <div className="flex items-center truncate">
-            {value ? value : "Select a school..."}
-          </div>
+          {value ? value : "Select a school..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -61,27 +59,30 @@ export function SchoolSearchInput({ value, onChange }: SchoolSearchInputProps) {
         <Command>
           {isLoading ? (
             <div className="py-6 text-center text-sm">Loading schools...</div>
-          ) : schools.length > 0 ? (
-            <CommandGroup className="max-h-[300px] overflow-y-auto">
-              {schools.map((school) => (
-                <CommandItem
-                  key={school.id || school.school_name}
-                  value={school.school_name}
-                  onSelect={() => handleSelect(school.school_name)}
-                  className="flex items-center"
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === school.school_name ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {school.school_name}
-                </CommandItem>
-              ))}
-            </CommandGroup>
           ) : (
-            <CommandEmpty>No schools available</CommandEmpty>
+            <>
+              {schools.length > 0 ? (
+                <CommandGroup className="max-h-[300px] overflow-y-auto">
+                  {schools.map((school) => (
+                    <CommandItem
+                      key={school.id || school.school_name}
+                      value={school.school_name}
+                      onSelect={() => handleSelect(school.school_name)}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          value === school.school_name ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {school.school_name}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              ) : (
+                <CommandEmpty>No schools available</CommandEmpty>
+              )}
+            </>
           )}
         </Command>
       </PopoverContent>
