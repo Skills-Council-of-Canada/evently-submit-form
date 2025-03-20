@@ -33,7 +33,7 @@ export const submitEvent = async (eventData: EventRecord): Promise<string | null
       contact_name: eventData.contactName,
       contact_email: eventData.contactEmail,
       audience_type: eventData.audienceType,
-      status: "pending",
+      status: "pending" as 'pending', // Explicitly type as literal
       created_at: new Date().toISOString()
     };
 

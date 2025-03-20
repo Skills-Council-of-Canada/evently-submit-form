@@ -1,4 +1,3 @@
-
 import { toast } from "@/hooks/use-toast";
 import { 
   AIRTABLE_API_KEY, 
@@ -6,7 +5,7 @@ import {
   AIRTABLE_TABLE_NAME,
   AIRTABLE_SCHEMA
 } from "./airtable/config";
-import { EventRecord } from "./airtable/types";
+import type { EventRecord } from "./airtable/types";
 
 /**
  * Submit event data to Airtable
@@ -190,4 +189,4 @@ export const updateEventStatus = async (
   }
 };
 
-export { EventRecord };
+export type { EventRecord };
