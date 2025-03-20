@@ -4,6 +4,7 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
 import { FormValues } from "../schema";
+import { SchoolSearchInput } from "../components/SchoolSearchInput";
 
 interface ContactInfoSectionProps {
   form: UseFormReturn<FormValues>;
@@ -24,7 +25,10 @@ export const ContactInfoSection = ({ form }: ContactInfoSectionProps) => {
                 School Name *
               </FormLabel>
               <FormControl>
-                <Input placeholder="Enter school name" {...field} />
+                <SchoolSearchInput 
+                  value={field.value}
+                  onChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
