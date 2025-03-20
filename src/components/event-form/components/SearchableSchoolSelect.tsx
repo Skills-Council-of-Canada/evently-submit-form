@@ -8,7 +8,6 @@ import { School } from "@/services/schoolService";
 import { cn } from "@/lib/utils";
 import { FormControl } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Input } from "@/components/ui/input";
 
 interface SearchableSchoolSelectProps {
   value: string;
@@ -69,6 +68,11 @@ export function SearchableSchoolSelect({
             role="combobox"
             aria-expanded={open}
             className="w-full justify-between"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault(); // Prevent form submission
+              setOpen(!open);
+            }}
           >
             {value ? value : "Start typing to search for a school..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -76,14 +80,14 @@ export function SearchableSchoolSelect({
         </FormControl>
       </PopoverTrigger>
       <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
-        <Command>
+        <Command shouldFilter={false}>
           <div className="flex items-center border-b px-3">
             <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
             <CommandInput 
               placeholder="Type to search schools..." 
               value={searchQuery}
               onValueChange={setSearchQuery}
-              className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground focus:outline-none" 
+              className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground focus:outline-none"
             />
           </div>
           <CommandEmpty>No schools found matching "{searchQuery}"</CommandEmpty>
