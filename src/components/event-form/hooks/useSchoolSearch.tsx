@@ -17,7 +17,6 @@ export function useSchoolSearch() {
     setIsLoading(true);
     try {
       const results = await searchSchools(query);
-      // Ensure we always have a valid array
       setSchools(Array.isArray(results) ? results : []);
     } catch (error) {
       console.error("Error searching schools:", error);
