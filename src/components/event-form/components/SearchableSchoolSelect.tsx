@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { Check, ChevronsUpDown, Search } from "lucide-react";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { School } from "@/services/schoolService";
 import { cn } from "@/lib/utils";
 import { FormControl } from "@/components/ui/form";
@@ -71,8 +70,11 @@ export function SearchableSchoolSelect({
 
   // Handle clicking outside
   useEffect(() => {
-    const handleClickOutside = () => {
-      setShowDropdown(false);
+    const handleClickOutside = (e: MouseEvent) => {
+      // @ts-ignore - we know the current target is an HTMLElement
+      if (e.target && !e.target.closest('.school-select-container')) {
+        setShowDropdown(false);
+      }
     };
 
     if (showDropdown) {
@@ -84,17 +86,24 @@ export function SearchableSchoolSelect({
     };
   }, [showDropdown]);
 
+  // Handle button click to prevent form submission
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowDropdown(!showDropdown);
+  };
+
   if (isLoading) {
     return <Skeleton className="h-10 w-full" />;
   }
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full school-select-container">
       <div className="flex">
         <FormControl>
           <Input
             type="text"
-            placeholder={value || "Start typing to search for a school..."}
+            placeholder="Search for a school..."
             value={searchQuery}
             onChange={handleInputChange}
             onFocus={() => setShowDropdown(true)}
@@ -106,11 +115,7 @@ export function SearchableSchoolSelect({
           variant="ghost"
           size="icon"
           className="absolute right-0 top-0 h-full"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setShowDropdown(!showDropdown);
-          }}
+          onClick={handleButtonClick}
         >
           <ChevronsUpDown className="h-4 w-4 opacity-50" />
           <span className="sr-only">Toggle menu</span>
@@ -119,16 +124,6 @@ export function SearchableSchoolSelect({
 
       {showDropdown && (
         <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover shadow-md">
-          <div className="flex items-center border-b px-3">
-            <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-            <input
-              className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground"
-              placeholder="Type to search schools..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onClick={(e) => e.stopPropagation()}
-            />
-          </div>
           <div className="max-h-[300px] overflow-y-auto p-1">
             {filteredSchools.length === 0 ? (
               <div className="py-6 text-center text-sm text-muted-foreground">
@@ -163,7 +158,7 @@ export function SearchableSchoolSelect({
       )}
       
       {/* Show the current selection as text if there is a value */}
-      {!showDropdown && value && !searchQuery && (
+      {!searchQuery && value && (
         <div className="mt-1 text-sm text-muted-foreground">
           Selected: {value}
         </div>
