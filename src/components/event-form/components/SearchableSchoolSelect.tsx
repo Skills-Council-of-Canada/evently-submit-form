@@ -7,6 +7,7 @@ import { School } from "@/services/schoolService";
 import { cn } from "@/lib/utils";
 import { FormControl } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 interface SearchableSchoolSelectProps {
   value: string;
@@ -19,7 +20,7 @@ interface SearchableSchoolSelectProps {
 export function SearchableSchoolSelect({
   value,
   onChange,
-  schools = [], // Default to empty array to avoid undefined errors
+  schools = [], 
   isLoading,
   onSchoolSelect
 }: SearchableSchoolSelectProps) {
@@ -70,32 +71,24 @@ export function SearchableSchoolSelect({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <FormControl>
-          <div 
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer flex items-center justify-between"
-            onClick={(e) => {
-              e.preventDefault(); // Prevent any navigation
-              e.stopPropagation(); // Stop event bubbling
-              setOpen(!open);
-            }}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                setOpen(!open);
-              }
-            }}
+          <Button
+            variant="outline"
+            role="combobox"
+            type="button" // Important: prevents form submission
+            aria-expanded={open}
+            className="w-full justify-between font-normal"
+            onClick={() => setOpen(!open)}
           >
             <span className="truncate">
               {value ? value : "Start typing to search for a school..."}
             </span>
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </div>
+          </Button>
         </FormControl>
       </PopoverTrigger>
       <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
         {safeSchools.length > 0 && (
-          <Command shouldFilter={false}> {/* Disable internal filtering */}
+          <Command shouldFilter={false}>
             <div className="flex items-center border-b px-3">
               <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
               <CommandInput 
