@@ -9,7 +9,99 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      events: {
+        Row: {
+          audience_type: string
+          contact_email: string
+          contact_name: string
+          created_at: string
+          description: string
+          event_date: string
+          event_name: string
+          event_time: string
+          id: string
+          school_name: string
+          status: string
+        }
+        Insert: {
+          audience_type: string
+          contact_email: string
+          contact_name: string
+          created_at?: string
+          description: string
+          event_date: string
+          event_name: string
+          event_time: string
+          id?: string
+          school_name: string
+          status?: string
+        }
+        Update: {
+          audience_type?: string
+          contact_email?: string
+          contact_name?: string
+          created_at?: string
+          description?: string
+          event_date?: string
+          event_name?: string
+          event_time?: string
+          id?: string
+          school_name?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      schools: {
+        Row: {
+          created_at: string
+          family: string | null
+          full_address: string | null
+          grades: string | null
+          id: string
+          municipality: string | null
+          panel: string | null
+          postal_code: string | null
+          school: string
+          school_name: string
+          school_type: string | null
+          street_name: string | null
+          street_number: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          family?: string | null
+          full_address?: string | null
+          grades?: string | null
+          id?: string
+          municipality?: string | null
+          panel?: string | null
+          postal_code?: string | null
+          school: string
+          school_name: string
+          school_type?: string | null
+          street_name?: string | null
+          street_number?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          family?: string | null
+          full_address?: string | null
+          grades?: string | null
+          id?: string
+          municipality?: string | null
+          panel?: string | null
+          postal_code?: string | null
+          school?: string
+          school_name?: string
+          school_type?: string | null
+          street_name?: string | null
+          street_number?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
