@@ -31,7 +31,6 @@ export function SchoolSearchInput({ value, onChange }: SchoolSearchInputProps) {
     fetchSchools();
   }, []);
 
-  // Using the more robust SearchableSchoolSelect component
   return (
     <SearchableSchoolSelect
       value={value}

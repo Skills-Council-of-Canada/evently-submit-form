@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from "react";
 import { Check, ChevronsUpDown, Search } from "lucide-react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { School } from "@/services/schoolService";
 import { cn } from "@/lib/utils";
 import { FormControl } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface SearchableSchoolSelectProps {
   value: string;
@@ -24,8 +24,8 @@ export function SearchableSchoolSelect({
   isLoading,
   onSchoolSelect
 }: SearchableSchoolSelectProps) {
-  const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
   
   // Make sure schools is always an array
   const safeSchools = Array.isArray(schools) ? schools : [];
@@ -56,94 +56,118 @@ export function SearchableSchoolSelect({
     }
   }, [value, onSchoolSelect, selectedSchool]);
 
-  // Clear search when popover closes
+  // Handle input change
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setShowDropdown(true);
+  };
+
+  // Handle school selection
+  const handleSelectSchool = (schoolName: string) => {
+    onChange(schoolName);
+    setShowDropdown(false);
+    setSearchQuery("");
+  };
+
+  // Handle clicking outside
   useEffect(() => {
-    if (!open) {
-      setSearchQuery("");
+    const handleClickOutside = () => {
+      setShowDropdown(false);
+    };
+
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
     }
-  }, [open]);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDropdown]);
 
   if (isLoading) {
     return <Skeleton className="h-10 w-full" />;
   }
 
-  // Handler to prevent any default behavior
-  const handleButtonClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setOpen(!open);
-  };
-
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
+    <div className="relative w-full">
+      <div className="flex">
         <FormControl>
-          <Button
-            variant="outline"
-            role="combobox"
-            type="button" // Important: prevents form submission
-            aria-expanded={open}
-            className="w-full justify-between font-normal"
-            onClick={handleButtonClick} // Use the new handler
-          >
-            <span className="truncate">
-              {value ? value : "Start typing to search for a school..."}
-            </span>
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
+          <Input
+            type="text"
+            placeholder={value || "Start typing to search for a school..."}
+            value={searchQuery}
+            onChange={handleInputChange}
+            onFocus={() => setShowDropdown(true)}
+            className="w-full pr-10"
+          />
         </FormControl>
-      </PopoverTrigger>
-      <PopoverContent 
-        className="w-[var(--radix-popover-trigger-width)] p-0" 
-        align="start"
-        sideOffset={5}
-        avoidCollisions
-        collisionPadding={20}
-      >
-        {safeSchools.length > 0 && (
-          <Command shouldFilter={false}>
-            <div className="flex items-center border-b px-3">
-              <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-              <CommandInput 
-                placeholder="Type to search schools..." 
-                value={searchQuery}
-                onValueChange={setSearchQuery}
-                className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground focus:outline-none"
-                autoFocus
-              />
-            </div>
-            {searchQuery && filteredSchools.length === 0 && (
-              <CommandEmpty>No schools found matching "{searchQuery}"</CommandEmpty>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="absolute right-0 top-0 h-full"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setShowDropdown(!showDropdown);
+          }}
+        >
+          <ChevronsUpDown className="h-4 w-4 opacity-50" />
+          <span className="sr-only">Toggle menu</span>
+        </Button>
+      </div>
+
+      {showDropdown && (
+        <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover shadow-md">
+          <div className="flex items-center border-b px-3">
+            <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+            <input
+              className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground"
+              placeholder="Type to search schools..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+          <div className="max-h-[300px] overflow-y-auto p-1">
+            {filteredSchools.length === 0 ? (
+              <div className="py-6 text-center text-sm text-muted-foreground">
+                {searchQuery ? `No schools found matching "${searchQuery}"` : "Type to search schools"}
+              </div>
+            ) : (
+              filteredSchools.map((school) => (
+                <div
+                  key={school.id || school.school_name}
+                  className={cn(
+                    "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground",
+                    value === school.school_name ? "bg-accent text-accent-foreground" : ""
+                  )}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleSelectSchool(school.school_name);
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      value === school.school_name ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  {school.school_name}
+                </div>
+              ))
             )}
-            <CommandGroup className="max-h-[300px] overflow-y-auto">
-              {safeSchools.length === 0 ? (
-                <CommandItem disabled>No schools available</CommandItem>
-              ) : filteredSchools.length === 0 && !searchQuery ? (
-                <CommandItem disabled>Type to search schools</CommandItem>
-              ) : (
-                filteredSchools.map((school) => (
-                  <CommandItem
-                    key={school.id || school.school_name}
-                    value={school.school_name}
-                    onSelect={(currentValue) => {
-                      onChange(currentValue);
-                      setOpen(false);
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        value === school.school_name ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-                    {school.school_name}
-                  </CommandItem>
-                ))
-              )}
-            </CommandGroup>
-          </Command>
-        )}
-      </PopoverContent>
-    </Popover>
+          </div>
+        </div>
+      )}
+      
+      {/* Show the current selection as text if there is a value */}
+      {!showDropdown && value && !searchQuery && (
+        <div className="mt-1 text-sm text-muted-foreground">
+          Selected: {value}
+        </div>
+      )}
+    </div>
   );
 }
