@@ -25,7 +25,7 @@ const Index = () => {
             src="/lovable-uploads/c368798b-3714-434f-88b4-7f1f86a2fa1f.png" 
             alt="Peel District School Board Logo" 
             className="max-w-full h-auto mb-4"
-            style={{ maxHeight: "180px" }}
+            style={{ maxHeight: "72px" }}
           />
           <h1 className="text-3xl font-bold text-gray-900 text-center">PDSB School Events Portal</h1>
         </div>
