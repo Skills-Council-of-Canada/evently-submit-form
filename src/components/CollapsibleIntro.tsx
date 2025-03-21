@@ -12,10 +12,6 @@ const CollapsibleIntro = () => {
 
   return (
     <div className="mb-4">
-      <h2 className="text-xl font-semibold text-event-purple mb-2">
-        📢 PDSB Storytelling & Public Engagement System
-      </h2>
-      
       <p className="text-gray-700 mb-2">
         The following form is part of an innovative new system designed to spotlight the incredible work happening across Peel District School Board.
       </p>
