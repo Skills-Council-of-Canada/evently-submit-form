@@ -26,15 +26,14 @@ const Index = () => {
           <img 
             src="/lovable-uploads/c368798b-3714-434f-88b4-7f1f86a2fa1f.png" 
             alt="Peel District School Board Logo" 
-            className="max-w-full h-auto mb-8"
+            className="max-w-full h-auto mb-12"
             style={{ maxHeight: "72px" }}
           />
-          
-          <div className="mb-8">
-            <BenefitBoxes />
-          </div>
-          
           <CollapsibleIntro />
+        </div>
+        
+        <div className="mb-16">
+          <BenefitBoxes />
         </div>
         
         {showEvents && (
