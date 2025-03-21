@@ -63,8 +63,9 @@ const prepareEventForSupabase = (eventData: EventRecord) => {
 const insertEventRecord = async (eventRecord: ReturnType<typeof prepareEventForSupabase>): Promise<string | null> => {
   try {
     console.log("🔷 insertEventRecord starting with:", JSON.stringify(eventRecord, null, 2));
+    
+    // Log Supabase client info without accessing protected properties
     console.log("🔷 Supabase client available:", !!supabase);
-    console.log("🔷 Supabase URL:", supabase.supabaseUrl);
     
     // Check Supabase connection
     try {

@@ -74,18 +74,6 @@ const EventForm = () => {
           </form>
         </Form>
       )}
-      
-      {/* Debug Dialog - Can be removed after fixing the issue */}
-      <Dialog>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Form Submission Status</DialogTitle>
-            <DialogDescription>
-              This dialog can be used for debugging form submission issues.
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
