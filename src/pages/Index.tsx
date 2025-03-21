@@ -68,7 +68,7 @@ const Index = () => {
         {showEvents && events && events.length > 0 && (
           <div className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Upcoming Events</h2>
-            <EventsTable />
+            <EventsTable events={events} isLoading={isLoading} error={error} />
           </div>
         )}
         

@@ -1,13 +1,18 @@
 
 import React from "react";
-import { useEvents } from "./hooks/useEvents";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CalendarIcon, Clock, Users, MapPin } from "lucide-react";
+import { EventRecord } from "@/services/eventService";
 
-const EventsTable = () => {
-  const { events, isLoading, error } = useEvents();
+// Update the component to accept events as props
+interface EventsTableProps {
+  events: EventRecord[];
+  isLoading: boolean;
+  error: Error | null;
+}
 
+const EventsTable = ({ events, isLoading, error }: EventsTableProps) => {
   if (isLoading) {
     return (
       <div className="space-y-4">
