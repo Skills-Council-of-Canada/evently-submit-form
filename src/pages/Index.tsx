@@ -27,7 +27,6 @@ const Index = () => {
             className="max-w-full h-auto mb-4"
             style={{ maxHeight: "72px" }}
           />
-          <h1 className="text-3xl font-bold text-gray-900 text-center">PDSB School Events Portal</h1>
         </div>
         
         {showEvents && (
