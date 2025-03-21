@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -30,11 +29,8 @@ export const submitEvent = async (eventData: EventRecord): Promise<string | null
     let formattedDate: string;
     if (eventData.eventDate instanceof Date) {
       formattedDate = eventData.eventDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-    } else if (typeof eventData.eventDate === 'object' && eventData.eventDate._type === 'Date') {
-      // Handle special Date object format from form
-      formattedDate = eventData.eventDate.value.iso.split('T')[0];
     } else {
-      // Fallback to string conversion
+      // Fallback to string conversion for any other case
       formattedDate = String(eventData.eventDate).split('T')[0];
     }
     
