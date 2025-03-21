@@ -10,6 +10,8 @@ import SuccessMessage from "./SuccessMessage";
 import FormHeader from "./FormHeader";
 import SubmitButton from "./SubmitButton";
 import { useEventForm } from "./hooks/useEventForm";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { toast } from "@/hooks/use-toast";
 
 const EventForm = () => {
   const {
@@ -23,10 +25,29 @@ const EventForm = () => {
     handleReset
   } = useEventForm();
 
-  // Correctly handle form submission
+  // Add debugging toast to verify form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submission triggered");
+    console.log("🔶 Form submission triggered");
+    
+    // Verify form is valid before submitting
+    const isValid = form.formState.isValid;
+    console.log("🔶 Form is valid:", isValid);
+    console.log("🔶 Form errors:", form.formState.errors);
+    
+    if (!isValid) {
+      toast({
+        title: "Form Validation Error",
+        description: "Please check all required fields are filled correctly.",
+        variant: "destructive",
+      });
+    }
+    
+    // Log current form values
+    const values = form.getValues();
+    console.log("🔶 Current form values:", JSON.stringify(values, null, 2));
+    
+    // Proceed with form submission
     form.handleSubmit(onSubmit)(e);
   };
 
@@ -53,6 +74,18 @@ const EventForm = () => {
           </form>
         </Form>
       )}
+      
+      {/* Debug Dialog - Can be removed after fixing the issue */}
+      <Dialog>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Form Submission Status</DialogTitle>
+            <DialogDescription>
+              This dialog can be used for debugging form submission issues.
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

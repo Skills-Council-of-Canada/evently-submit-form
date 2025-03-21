@@ -9,11 +9,16 @@ import { toast } from "@/hooks/use-toast";
  * @returns Formatted date string
  */
 const formatEventDate = (date: Date | string): string => {
+  console.log("🔷 formatEventDate called with:", date);
   if (date instanceof Date) {
-    return date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+    const formattedDate = date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+    console.log("🔷 Date formatted as:", formattedDate);
+    return formattedDate;
   }
   // Fallback to string conversion for any other case
-  return String(date).split('T')[0];
+  const formattedString = String(date).split('T')[0];
+  console.log("🔷 String date formatted as:", formattedString);
+  return formattedString;
 };
 
 /**
@@ -22,6 +27,16 @@ const formatEventDate = (date: Date | string): string => {
  * @returns The event data formatted for Supabase
  */
 const prepareEventForSupabase = (eventData: EventRecord) => {
+  console.log("🔷 prepareEventForSupabase called with:", JSON.stringify(eventData, null, 2));
+  
+  // Validate required fields
+  if (!eventData.eventName || !eventData.eventDate || !eventData.eventTime || 
+      !eventData.description || !eventData.schoolName || 
+      !eventData.contactName || !eventData.contactEmail || !eventData.audienceType) {
+    console.error("🔷 Missing required fields in event data:", eventData);
+    throw new Error("Missing required fields for event submission");
+  }
+  
   const prepared = {
     event_name: eventData.eventName,
     event_date: formatEventDate(eventData.eventDate),
@@ -36,7 +51,7 @@ const prepareEventForSupabase = (eventData: EventRecord) => {
     created_at: new Date().toISOString()
   };
   
-  console.log("🔶 Prepared data for Supabase:", JSON.stringify(prepared, null, 2));
+  console.log("🔷 Prepared data for Supabase:", JSON.stringify(prepared, null, 2));
   return prepared;
 };
 
@@ -47,26 +62,34 @@ const prepareEventForSupabase = (eventData: EventRecord) => {
  */
 const insertEventRecord = async (eventRecord: ReturnType<typeof prepareEventForSupabase>): Promise<string | null> => {
   try {
-    console.log("🔶 Inserting record into Supabase:", JSON.stringify(eventRecord, null, 2));
-    console.log("🔶 Supabase client available:", !!supabase);
+    console.log("🔷 insertEventRecord starting with:", JSON.stringify(eventRecord, null, 2));
+    console.log("🔷 Supabase client available:", !!supabase);
+    console.log("🔷 Supabase URL:", supabase.supabaseUrl);
     
     // Check Supabase connection
     try {
+      console.log("🔷 Testing Supabase connection with ping...");
       const { data: pingData, error: pingError } = await supabase.from('events').select('count').limit(1);
-      console.log("🔶 Supabase ping result:", pingData, pingError);
+      console.log("🔷 Supabase ping result:", pingData, pingError);
+      
+      if (pingError) {
+        console.error("🔷 Supabase ping failed with error:", pingError);
+        throw pingError;
+      }
     } catch (pingError) {
-      console.error("🔶 Supabase ping failed:", pingError);
+      console.error("🔷 Supabase ping threw exception:", pingError);
     }
     
-    const { data, error } = await supabase
+    console.log("🔷 Executing Supabase insert...");
+    const { data, error, status, statusText } = await supabase
       .from('events')
       .insert(eventRecord)
       .select();
 
-    console.log("🔶 Supabase response data:", data);
+    console.log("🔷 Supabase response:", { data, status, statusText });
     
     if (error) {
-      console.error("🔶 Supabase error details:", {
+      console.error("🔷 Supabase error details:", {
         code: error.code,
         message: error.message,
         details: error.details,
@@ -75,12 +98,17 @@ const insertEventRecord = async (eventRecord: ReturnType<typeof prepareEventForS
       throw new Error(`Supabase error: ${error.message}`);
     }
 
-    console.log("🔶 Event successfully submitted to Supabase:", data);
+    if (!data || data.length === 0) {
+      console.error("🔷 No data returned from successful insert");
+      throw new Error("No data returned from Supabase insert");
+    }
+
+    console.log("🔷 Event successfully submitted to Supabase:", data);
     
     // Return the ID of the created record
-    return data?.[0]?.id || null;
+    return data[0]?.id || null;
   } catch (error) {
-    console.error("🔶 Error in insertEventRecord:", error);
+    console.error("🔷 Error in insertEventRecord:", error);
     throw error;
   }
 };
@@ -92,20 +120,28 @@ const insertEventRecord = async (eventRecord: ReturnType<typeof prepareEventForS
  */
 export const submitEvent = async (eventData: EventRecord): Promise<string | null> => {
   try {
-    console.log("🔶 Starting submitEvent function");
-    console.log("🔶 Event time being submitted:", eventData.eventTime);
-    console.log("🔶 Supabase client available:", !!supabase);
+    console.log("🔷 Starting submitEvent function with data:", JSON.stringify(eventData, null, 2));
+    console.log("🔷 Event date type:", typeof eventData.eventDate, eventData.eventDate instanceof Date);
+    console.log("🔷 Event time being submitted:", eventData.eventTime);
     
     // Prepare the data for Supabase
     const eventRecord = prepareEventForSupabase(eventData);
 
     // Insert the event record
-    return await insertEventRecord(eventRecord);
+    const recordId = await insertEventRecord(eventRecord);
+    console.log("🔷 submitEvent success, record ID:", recordId);
+    
+    toast({
+      title: "Event Submitted Successfully",
+      description: "Your event has been saved to the database.",
+    });
+    
+    return recordId;
   } catch (error) {
-    console.error("🔶 Error submitting to Supabase:", error);
+    console.error("🔷 Error submitting to Supabase:", error);
     toast({
       title: "Submission Error",
-      description: "There was a problem submitting your event.",
+      description: error instanceof Error ? error.message : "There was a problem submitting your event.",
       variant: "destructive",
     });
     return null;
