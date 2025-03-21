@@ -55,8 +55,9 @@ export const submitEvent = async (eventData: EventRecord): Promise<string | null
     console.log("Inserting record into Supabase:", JSON.stringify(eventRecord, null, 2));
     console.log("Event time in record:", eventRecord.event_time);
 
-    // Log Supabase connection details (without sensitive info)
-    console.log("Supabase URL:", supabase.supabaseUrl);
+    // Remove the problematic line that was causing the error
+    // Don't log the supabaseUrl since it's protected
+    console.log("Attempting to insert data into Supabase events table");
     
     try {
       // Insert the record into Supabase
