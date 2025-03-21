@@ -40,7 +40,7 @@ const BenefitBoxes = () => {
   ];
 
   return (
-    <div className="mb-10">
+    <div>
       <h2 className="text-xl font-semibold text-gray-800 mb-5 text-center">Why This Matters to Your School</h2>
       <div className="flex flex-col md:flex-row gap-4">
         {benefits.map((benefit, index) => (
