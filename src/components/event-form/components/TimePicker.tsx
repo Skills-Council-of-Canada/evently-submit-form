@@ -7,8 +7,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import TimeSelector from "./TimeSelector";
 
 interface TimeValue {
   startHour: string;
@@ -36,15 +36,6 @@ const TimePicker = ({ value, onChange, placeholder = "Select time" }: TimePicker
     endPeriod: "AM",
   });
   
-  // Hours options: 1-12
-  const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
-  
-  // Minutes options: 00, 15, 30, 45
-  const minutes = ["00", "15", "30", "45"];
-  
-  // Periods: AM, PM
-  const periods = ["AM", "PM"];
-
   // Parse existing value when component mounts or value changes
   useEffect(() => {
     if (value) {
@@ -98,111 +89,25 @@ const TimePicker = ({ value, onChange, placeholder = "Select time" }: TimePicker
       </PopoverTrigger>
       <PopoverContent className="w-96 p-4" align="start">
         <div className="grid grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label className="font-medium text-gray-700">Start Time</Label>
-            <div className="grid grid-cols-3 gap-2">
-              <Select
-                value={timeValue.startHour}
-                onValueChange={(value) => updateTime({ startHour: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Hour" />
-                </SelectTrigger>
-                <SelectContent>
-                  {hours.map((hour) => (
-                    <SelectItem key={`start-hour-${hour}`} value={hour}>
-                      {hour}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              
-              <Select
-                value={timeValue.startMinute}
-                onValueChange={(value) => updateTime({ startMinute: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Minute" />
-                </SelectTrigger>
-                <SelectContent>
-                  {minutes.map((minute) => (
-                    <SelectItem key={`start-minute-${minute}`} value={minute}>
-                      {minute}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              
-              <Select
-                value={timeValue.startPeriod}
-                onValueChange={(value) => updateTime({ startPeriod: value as "AM" | "PM" })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="AM/PM" />
-                </SelectTrigger>
-                <SelectContent>
-                  {periods.map((period) => (
-                    <SelectItem key={`start-period-${period}`} value={period}>
-                      {period}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          <TimeSelector 
+            title="Start Time"
+            hour={timeValue.startHour}
+            minute={timeValue.startMinute}
+            period={timeValue.startPeriod}
+            onHourChange={(hour) => updateTime({ startHour: hour })}
+            onMinuteChange={(minute) => updateTime({ startMinute: minute })}
+            onPeriodChange={(period) => updateTime({ startPeriod: period as "AM" | "PM" })}
+          />
           
-          <div className="space-y-2">
-            <Label className="font-medium text-gray-700">End Time</Label>
-            <div className="grid grid-cols-3 gap-2">
-              <Select
-                value={timeValue.endHour}
-                onValueChange={(value) => updateTime({ endHour: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Hour" />
-                </SelectTrigger>
-                <SelectContent>
-                  {hours.map((hour) => (
-                    <SelectItem key={`end-hour-${hour}`} value={hour}>
-                      {hour}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              
-              <Select
-                value={timeValue.endMinute}
-                onValueChange={(value) => updateTime({ endMinute: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Minute" />
-                </SelectTrigger>
-                <SelectContent>
-                  {minutes.map((minute) => (
-                    <SelectItem key={`end-minute-${minute}`} value={minute}>
-                      {minute}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              
-              <Select
-                value={timeValue.endPeriod}
-                onValueChange={(value) => updateTime({ endPeriod: value as "AM" | "PM" })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="AM/PM" />
-                </SelectTrigger>
-                <SelectContent>
-                  {periods.map((period) => (
-                    <SelectItem key={`end-period-${period}`} value={period}>
-                      {period}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          <TimeSelector 
+            title="End Time"
+            hour={timeValue.endHour}
+            minute={timeValue.endMinute}
+            period={timeValue.endPeriod}
+            onHourChange={(hour) => updateTime({ endHour: hour })}
+            onMinuteChange={(minute) => updateTime({ endMinute: minute })}
+            onPeriodChange={(period) => updateTime({ endPeriod: period as "AM" | "PM" })}
+          />
         </div>
         
         <div className="mt-4 text-sm text-gray-500">
