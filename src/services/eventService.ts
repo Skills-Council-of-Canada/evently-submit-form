@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -68,6 +69,11 @@ export const submitEvent = async (eventData: EventRecord): Promise<string | null
     return data?.[0]?.id || null;
   } catch (error) {
     console.error("Error submitting to Supabase:", error);
+    toast({
+      title: "Submission Error",
+      description: "There was a problem submitting your event.",
+      variant: "destructive",
+    });
     return null;
   }
 };

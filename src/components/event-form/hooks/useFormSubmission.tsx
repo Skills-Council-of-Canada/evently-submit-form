@@ -40,6 +40,7 @@ export function useFormSubmission() {
       if (data.eventImage && data.eventImage.length > 0) {
         const imageFile = data.eventImage[0];
         imageUrl = await uploadEventImage(imageFile);
+        console.log("Image uploaded successfully:", imageUrl);
       }
       
       // Prepare event data including the image URL
