@@ -20,11 +20,22 @@ export const checkEventExists = async (
       : String(eventDate).split('T')[0];
     
     console.log(`⚠️ Checking for duplicate event with name: ${eventName}, date: ${formattedDate}, school: ${schoolName}`);
-    console.log("⚠️ Using Supabase client from:", supabase.supabaseUrl);
+    // Don't try to access protected supabaseUrl property
+    console.log("⚠️ Verifying Supabase client is available:", !!supabase);
     
-    // Get the database URL to verify which database we're connected to
-    const { data: urlData, error: urlError } = await supabase.from('_metadata').select('*').limit(1);
-    console.log("⚠️ Database connection check:", urlData, urlError);
+    // Don't try to query _metadata table which doesn't exist
+    // Instead, we'll run a simpler check on a known table
+    try {
+      console.log("⚠️ Testing database connection with a simple query");
+      const { data: testData, error: testError } = await supabase
+        .from('events')
+        .select('id')
+        .limit(1);
+      
+      console.log("⚠️ Database connection test result:", testData ? "Success" : "No data", testError ? `Error: ${testError.message}` : "No error");
+    } catch (testError) {
+      console.error("⚠️ Error testing database connection:", testError);
+    }
     
     // Query Supabase to check for duplicates - with extra logging
     console.log("⚠️ About to execute duplicate check query");

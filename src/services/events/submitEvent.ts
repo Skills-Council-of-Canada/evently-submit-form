@@ -66,7 +66,7 @@ const insertEventRecord = async (eventRecord: ReturnType<typeof prepareEventForS
     
     // Log Supabase client info without accessing protected properties
     console.log("🔷 Supabase client available:", !!supabase);
-    console.log("🔷 Supabase URL being used:", supabase.supabaseUrl);
+    // Don't try to access protected supabaseUrl property
     
     // Check Supabase connection
     try {
