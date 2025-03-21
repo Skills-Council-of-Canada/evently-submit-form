@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { formSchema, FormValues } from "../schema";
 import { useImageUpload } from "./useImageUpload";
 import { useFormSubmission } from "./useFormSubmission";
-import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 export function useEventForm() {
@@ -40,11 +39,15 @@ export function useEventForm() {
     // Prevent the function from proceeding if already submitting
     if (isSubmitting) return;
     
+    console.log("onSubmit called with data:", data);
     const recordId = await submitForm(data);
     
     if (recordId) {
+      console.log("Form submitted successfully with record ID:", recordId);
       form.reset();
       resetImage();
+    } else {
+      console.error("Form submission failed");
     }
   };
 

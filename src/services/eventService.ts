@@ -46,7 +46,7 @@ export const submitEvent = async (eventData: EventRecord): Promise<string | null
       contact_email: eventData.contactEmail,
       audience_type: eventData.audienceType,
       image_url: eventData.imageUrl || null,
-      status: "pending" as 'pending', // Explicitly cast as literal type
+      status: "pending" as const, // Use const assertion for literal type
       created_at: new Date().toISOString()
     };
 
