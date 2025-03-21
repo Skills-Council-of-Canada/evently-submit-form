@@ -17,6 +17,14 @@ export function useFormSubmission() {
     try {
       console.log("Submitting form with data:", data);
       
+      // Handle image upload if an image was selected
+      let imageUrl = null;
+      if (data.eventImage && data.eventImage.length > 0) {
+        const imageFile = data.eventImage[0];
+        imageUrl = await uploadEventImage(imageFile);
+        console.log("Image uploaded successfully:", imageUrl);
+      }
+      
       // Check for duplicate event
       const isDuplicate = await checkEventExists(
         data.eventName,
@@ -25,6 +33,7 @@ export function useFormSubmission() {
       );
       
       if (isDuplicate) {
+        console.log("Duplicate event detected");
         setSubmissionError("An event with the same name, date, and school already exists. Please check your submission.");
         toast({
           title: "Duplicate Event",
@@ -33,14 +42,6 @@ export function useFormSubmission() {
         });
         setIsSubmitting(false);
         return null;
-      }
-      
-      // Handle image upload if an image was selected
-      let imageUrl = null;
-      if (data.eventImage && data.eventImage.length > 0) {
-        const imageFile = data.eventImage[0];
-        imageUrl = await uploadEventImage(imageFile);
-        console.log("Image uploaded successfully:", imageUrl);
       }
       
       // Prepare event data including the image URL

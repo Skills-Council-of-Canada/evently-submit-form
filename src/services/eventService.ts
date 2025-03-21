@@ -94,6 +94,8 @@ export const checkEventExists = async (
     // Format the date to YYYY-MM-DD for filtering
     const formattedDate = eventDate.toISOString().split('T')[0];
     
+    console.log(`Checking for duplicate event with name: ${eventName}, date: ${formattedDate}, school: ${schoolName}`);
+    
     // Query Supabase to check for duplicates
     const { data, error } = await supabase
       .from('events')
@@ -103,14 +105,18 @@ export const checkEventExists = async (
       .eq('school_name', schoolName);
 
     if (error) {
+      console.error("Error checking for duplicates:", error);
       throw new Error(`Supabase error: ${error.message}`);
     }
 
+    console.log("Duplicate check result:", data);
+    
     // If records are returned, it means a duplicate exists
     return data && data.length > 0;
   } catch (error) {
     console.error("Error checking for duplicate events:", error);
-    return false; // Default to allowing submission in case of error
+    // On error, default to allowing submission
+    return false;
   }
 };
 
