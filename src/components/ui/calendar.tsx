@@ -1,7 +1,15 @@
 
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { DayPicker, DayPickerSingleProps, DayPickerRangeProps, DayPickerMultipleProps } from "react-day-picker";
+import { 
+  DayPicker, 
+  DayPickerSingleProps, 
+  DayPickerRangeProps, 
+  DayPickerMultipleProps,
+  SelectSingleEventHandler,
+  SelectRangeEventHandler,
+  SelectMultipleEventHandler
+} from "react-day-picker";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -14,26 +22,6 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
-  // The props.mode will determine whether it's single, range, or multiple
-  const mode = props.mode || "single";
-  
-  // Function to auto-close the parent Popover when a date is selected
-  // This needs to be handled in the parent component that implements the calendar
-  const handleSelectSingle = React.useCallback(
-    (day: Date | undefined) => {
-      if (props.onSelect && mode === "single") {
-        // Call the original onSelect function
-        (props.onSelect as (day: Date | undefined) => void)(day);
-      }
-    },
-    [props, mode]
-  );
-
-  // We need to override onSelect only for single mode
-  const modifiedProps = mode === "single" 
-    ? { ...props, onSelect: handleSelectSingle } 
-    : props;
-
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -76,7 +64,7 @@ function Calendar({
         IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
       }}
-      {...modifiedProps}
+      {...props}
     />
   );
 }
