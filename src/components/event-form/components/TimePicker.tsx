@@ -20,15 +20,24 @@ const TimePicker = ({ value, onChange, placeholder = "Select time" }: TimePicker
   const [open, setOpen] = useState(false);
   const { timeValue, updateTime } = useTimePickerState({ value, onChange });
   
+  console.log("TimePicker rendering with value:", value);
+  
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <div className="relative">
           <Input
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
+            value={value || ''}
+            onChange={(e) => {
+              console.log("Input value changed to:", e.target.value);
+              onChange(e.target.value);
+            }}
             placeholder={placeholder}
             className="w-full pr-10"
+            onClick={() => {
+              console.log("TimePicker input clicked, opening popover");
+              setOpen(true);
+            }}
           />
           <Clock className="absolute right-3 top-2.5 h-4 w-4 text-gray-400 pointer-events-none" />
         </div>
@@ -40,9 +49,18 @@ const TimePicker = ({ value, onChange, placeholder = "Select time" }: TimePicker
             hour={timeValue.startHour}
             minute={timeValue.startMinute}
             period={timeValue.startPeriod}
-            onHourChange={(hour) => updateTime({ startHour: hour })}
-            onMinuteChange={(minute) => updateTime({ startMinute: minute })}
-            onPeriodChange={(period) => updateTime({ startPeriod: period as "AM" | "PM" })}
+            onHourChange={(hour) => {
+              console.log("Start hour changed to:", hour);
+              updateTime({ startHour: hour });
+            }}
+            onMinuteChange={(minute) => {
+              console.log("Start minute changed to:", minute);
+              updateTime({ startMinute: minute });
+            }}
+            onPeriodChange={(period) => {
+              console.log("Start period changed to:", period);
+              updateTime({ startPeriod: period as "AM" | "PM" });
+            }}
           />
           
           <TimeSelector 
@@ -50,9 +68,18 @@ const TimePicker = ({ value, onChange, placeholder = "Select time" }: TimePicker
             hour={timeValue.endHour}
             minute={timeValue.endMinute}
             period={timeValue.endPeriod}
-            onHourChange={(hour) => updateTime({ endHour: hour })}
-            onMinuteChange={(minute) => updateTime({ endMinute: minute })}
-            onPeriodChange={(period) => updateTime({ endPeriod: period as "AM" | "PM" })}
+            onHourChange={(hour) => {
+              console.log("End hour changed to:", hour);
+              updateTime({ endHour: hour });
+            }}
+            onMinuteChange={(minute) => {
+              console.log("End minute changed to:", minute);
+              updateTime({ endMinute: minute });
+            }}
+            onPeriodChange={(period) => {
+              console.log("End period changed to:", period);
+              updateTime({ endPeriod: period as "AM" | "PM" });
+            }}
           />
         </div>
         

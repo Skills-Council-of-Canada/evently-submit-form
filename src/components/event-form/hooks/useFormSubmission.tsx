@@ -15,7 +15,7 @@ export function useFormSubmission() {
     setSubmissionError(null);
     
     try {
-      console.log("Submitting form with data:", data);
+      console.log("Submitting form with data:", JSON.stringify(data, null, 2));
       
       // Handle image upload if an image was selected
       let imageUrl = null;
@@ -30,6 +30,17 @@ export function useFormSubmission() {
       
       // Ensure eventTime is properly formatted
       console.log("Event time from form:", data.eventTime);
+      if (!data.eventTime || typeof data.eventTime !== 'string') {
+        console.error("Event time is invalid:", data.eventTime);
+        throw new Error("Invalid event time format");
+      }
+      
+      // Validate time format
+      const timePattern = /(\d{1,2}):(\d{2}) (AM|PM) - (\d{1,2}):(\d{2}) (AM|PM)/;
+      if (!timePattern.test(data.eventTime)) {
+        console.error("Event time format doesn't match expected pattern:", data.eventTime);
+        console.log("Expected format: 'HH:MM AM/PM - HH:MM AM/PM'");
+      }
       
       // Check for duplicate event with properly formatted date
       const isDuplicate = await checkEventExists(
@@ -63,7 +74,7 @@ export function useFormSubmission() {
         imageUrl: imageUrl
       };
       
-      console.log("Submitting event to database:", eventData);
+      console.log("Submitting event to database:", JSON.stringify(eventData, null, 2));
       console.log("Event time being sent to database:", eventData.eventTime);
       
       // Submit the event with image URL
@@ -82,6 +93,8 @@ export function useFormSubmission() {
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      console.error("Error details:", errorMessage);
       setSubmissionError("There was a problem submitting your event. Please try again.");
       toast({
         title: "Submission Error",
