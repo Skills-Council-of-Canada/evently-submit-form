@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import EventForm from "@/components/event-form/EventForm";
 import EventsTable from "@/components/event-display/EventsTable";
 import { useEvents } from "@/components/event-display/hooks/useEvents";
+import BenefitBoxes from "@/components/BenefitBoxes";
 
 const Index = () => {
   const { events, isLoading } = useEvents();
@@ -31,6 +32,8 @@ const Index = () => {
             The following form is an innovative tool that will capture your events, activities, student, teacher, school successes, and seamless communication back to the PDSB communication's team, instantly transforming your news into marketing content to share.
           </p>
         </div>
+        
+        <BenefitBoxes />
         
         {showEvents && (
           <div className="mb-12">
