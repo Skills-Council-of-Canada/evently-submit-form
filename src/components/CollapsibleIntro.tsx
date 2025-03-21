@@ -11,7 +11,7 @@ const CollapsibleIntro = () => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
-    <div className="mb-8">
+    <div className="mb-4">
       <h2 className="text-xl font-semibold text-event-purple mb-2">
         📢 PDSB Storytelling & Public Engagement System
       </h2>

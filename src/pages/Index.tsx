@@ -22,7 +22,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 py-12 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
-        <div className="flex flex-col items-center mb-8">
+        <div className="flex flex-col items-center mb-4">
           <img 
             src="/lovable-uploads/c368798b-3714-434f-88b4-7f1f86a2fa1f.png" 
             alt="Peel District School Board Logo" 
@@ -32,7 +32,7 @@ const Index = () => {
           <CollapsibleIntro />
         </div>
         
-        <div className="mb-12">
+        <div className="mb-16">
           <BenefitBoxes />
         </div>
         
