@@ -1,7 +1,6 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
@@ -9,6 +8,17 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+
+interface TimeValue {
+  startHour: string;
+  startMinute: string;
+  startPeriod: "AM" | "PM";
+  endHour: string;
+  endMinute: string;
+  endPeriod: "AM" | "PM";
+}
 
 interface TimePickerProps {
   value: string;
@@ -17,36 +27,53 @@ interface TimePickerProps {
 }
 
 const TimePicker = ({ value, onChange, placeholder = "Select time" }: TimePickerProps) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [timeValue, setTimeValue] = React.useState<TimeValue>({
+    startHour: "8",
+    startMinute: "00",
+    startPeriod: "AM",
+    endHour: "9",
+    endMinute: "00",
+    endPeriod: "AM",
+  });
   
-  // Generate time options in 30-minute intervals
-  const timeOptions = [];
-  for (let hour = 0; hour < 24; hour++) {
-    for (let minute of [0, 30]) {
-      const period = hour >= 12 ? 'PM' : 'AM';
-      const displayHour = hour % 12 === 0 ? 12 : hour % 12;
-      const formattedMinute = minute === 0 ? '00' : minute.toString();
-      const timeString = `${displayHour}:${formattedMinute} ${period}`;
-      timeOptions.push(timeString);
-    }
-  }
+  // Hours options: 1-12
+  const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
+  
+  // Minutes options: 00, 15, 30, 45
+  const minutes = ["00", "15", "30", "45"];
+  
+  // Periods: AM, PM
+  const periods = ["AM", "PM"];
 
-  // Add common time ranges
-  const timeRanges = [
-    "8:00 AM - 9:00 AM",
-    "9:00 AM - 10:00 AM",
-    "10:00 AM - 11:00 AM",
-    "11:00 AM - 12:00 PM",
-    "12:00 PM - 1:00 PM",
-    "1:00 PM - 2:00 PM",
-    "2:00 PM - 3:00 PM",
-    "3:00 PM - 4:00 PM",
-    "4:00 PM - 5:00 PM",
-    "5:00 PM - 6:00 PM",
-    "6:00 PM - 7:00 PM",
-    "7:00 PM - 8:00 PM",
-    "8:00 PM - 9:00 PM",
-  ];
+  // Parse existing value when component mounts or value changes
+  React.useEffect(() => {
+    if (value) {
+      const timePattern = /(\d{1,2}):(\d{2}) (AM|PM) - (\d{1,2}):(\d{2}) (AM|PM)/;
+      const match = value.match(timePattern);
+      
+      if (match) {
+        setTimeValue({
+          startHour: match[1],
+          startMinute: match[2],
+          startPeriod: match[3] as "AM" | "PM",
+          endHour: match[4],
+          endMinute: match[5],
+          endPeriod: match[6] as "AM" | "PM",
+        });
+      }
+    }
+  }, [value]);
+
+  // Update the formatted time string when any time value changes
+  const updateTime = (newTimeValue: Partial<TimeValue>) => {
+    const updatedTimeValue = { ...timeValue, ...newTimeValue };
+    setTimeValue(updatedTimeValue);
+    
+    const formattedTime = `${updatedTimeValue.startHour}:${updatedTimeValue.startMinute} ${updatedTimeValue.startPeriod} - ${updatedTimeValue.endHour}:${updatedTimeValue.endMinute} ${updatedTimeValue.endPeriod}`;
+    
+    onChange(formattedTime);
+  };
   
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -61,52 +88,117 @@ const TimePicker = ({ value, onChange, placeholder = "Select time" }: TimePicker
           <Clock className="absolute right-3 top-2.5 h-4 w-4 text-gray-400 pointer-events-none" />
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-64 p-0" align="start">
-        <div className="max-h-[300px] overflow-y-auto p-2">
-          <div className="mb-3">
-            <p className="text-sm font-medium text-gray-700 mb-2">Common Time Ranges</p>
-            <div className="space-y-1">
-              {timeRanges.map((timeRange) => (
-                <Button
-                  key={timeRange}
-                  variant="ghost"
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    value === timeRange && "bg-accent text-accent-foreground"
-                  )}
-                  onClick={() => {
-                    onChange(timeRange);
-                    setOpen(false);
-                  }}
-                >
-                  {timeRange}
-                </Button>
-              ))}
+      <PopoverContent className="w-96 p-4" align="start">
+        <div className="grid grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Label className="font-medium text-gray-700">Start Time</Label>
+            <div className="grid grid-cols-3 gap-2">
+              <Select
+                value={timeValue.startHour}
+                onValueChange={(value) => updateTime({ startHour: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Hour" />
+                </SelectTrigger>
+                <SelectContent>
+                  {hours.map((hour) => (
+                    <SelectItem key={`start-hour-${hour}`} value={hour}>
+                      {hour}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              <Select
+                value={timeValue.startMinute}
+                onValueChange={(value) => updateTime({ startMinute: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Minute" />
+                </SelectTrigger>
+                <SelectContent>
+                  {minutes.map((minute) => (
+                    <SelectItem key={`start-minute-${minute}`} value={minute}>
+                      {minute}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              <Select
+                value={timeValue.startPeriod}
+                onValueChange={(value) => updateTime({ startPeriod: value as "AM" | "PM" })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="AM/PM" />
+                </SelectTrigger>
+                <SelectContent>
+                  {periods.map((period) => (
+                    <SelectItem key={`start-period-${period}`} value={period}>
+                      {period}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
           
-          <div>
-            <p className="text-sm font-medium text-gray-700 mb-2">Single Times</p>
-            <div className="grid grid-cols-2 gap-1">
-              {timeOptions.map((timeOption) => (
-                <Button
-                  key={timeOption}
-                  variant="ghost"
-                  size="sm"
-                  className={cn(
-                    "justify-start text-left font-normal",
-                    value === timeOption && "bg-accent text-accent-foreground"
-                  )}
-                  onClick={() => {
-                    onChange(timeOption);
-                    setOpen(false);
-                  }}
-                >
-                  {timeOption}
-                </Button>
-              ))}
+          <div className="space-y-2">
+            <Label className="font-medium text-gray-700">End Time</Label>
+            <div className="grid grid-cols-3 gap-2">
+              <Select
+                value={timeValue.endHour}
+                onValueChange={(value) => updateTime({ endHour: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Hour" />
+                </SelectTrigger>
+                <SelectContent>
+                  {hours.map((hour) => (
+                    <SelectItem key={`end-hour-${hour}`} value={hour}>
+                      {hour}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              <Select
+                value={timeValue.endMinute}
+                onValueChange={(value) => updateTime({ endMinute: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Minute" />
+                </SelectTrigger>
+                <SelectContent>
+                  {minutes.map((minute) => (
+                    <SelectItem key={`end-minute-${minute}`} value={minute}>
+                      {minute}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              <Select
+                value={timeValue.endPeriod}
+                onValueChange={(value) => updateTime({ endPeriod: value as "AM" | "PM" })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="AM/PM" />
+                </SelectTrigger>
+                <SelectContent>
+                  {periods.map((period) => (
+                    <SelectItem key={`end-period-${period}`} value={period}>
+                      {period}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
+        </div>
+        
+        <div className="mt-4 text-sm text-gray-500">
+          Select both start and end times for your event
         </div>
       </PopoverContent>
     </Popover>

@@ -99,7 +99,7 @@ export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> 
                 <TimePicker
                   value={field.value}
                   onChange={field.onChange}
-                  placeholder="6:00 PM - 8:00 PM"
+                  placeholder="Select start and end times"
                 />
               </FormControl>
               <FormDescription>
