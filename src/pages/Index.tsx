@@ -30,7 +30,6 @@ const Index = () => {
         )}
         
         <div>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Submit a New Event</h2>
           <EventForm />
         </div>
       </div>
