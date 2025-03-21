@@ -5,9 +5,10 @@ import EventsTable from "@/components/event-display/EventsTable";
 import { useEvents } from "@/components/event-display/hooks/useEvents";
 import BenefitBoxes from "@/components/BenefitBoxes";
 import CollapsibleIntro from "@/components/CollapsibleIntro";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Index = () => {
-  const { events, isLoading } = useEvents();
+  const { events, isLoading, error } = useEvents();
   const [showEvents, setShowEvents] = useState(false);
   
   useEffect(() => {
@@ -44,6 +45,11 @@ const Index = () => {
         </div>
       </div>
     );
+  }
+
+  // Handle error state 
+  if (error) {
+    console.error("Error loading events:", error);
   }
 
   return (
