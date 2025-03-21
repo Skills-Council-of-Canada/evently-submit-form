@@ -23,13 +23,19 @@ const EventForm = () => {
     handleReset
   } = useEventForm();
 
+  // Added explicit event parameter and preventDefault
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    form.handleSubmit(onSubmit)(e);
+  };
+
   return (
     <div className="form-container">
       {isSuccess ? (
         <SuccessMessage onReset={handleReset} />
       ) : (
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-8">
             <FormHeader submissionError={submissionError} />
 
             <EventDetailsSection form={form} />

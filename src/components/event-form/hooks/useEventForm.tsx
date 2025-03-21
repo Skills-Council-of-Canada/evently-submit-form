@@ -37,6 +37,9 @@ export function useEventForm() {
   } = useFormSubmission();
 
   const onSubmit = async (data: FormValues) => {
+    // Prevent the function from proceeding if already submitting
+    if (isSubmitting) return;
+    
     const recordId = await submitForm(data);
     
     if (recordId) {
