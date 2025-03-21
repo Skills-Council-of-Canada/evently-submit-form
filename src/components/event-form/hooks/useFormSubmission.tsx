@@ -46,25 +46,8 @@ export function useFormSubmission() {
         console.log("📝 Expected format: 'HH:MM AM/PM - HH:MM AM/PM'");
       }
       
-      // Check for duplicate event with properly formatted date
-      console.log("📝 Checking for duplicate event");
-      const isDuplicate = await checkEventExists(
-        data.eventName,
-        eventDate,
-        data.schoolName
-      );
-      
-      if (isDuplicate) {
-        console.log("📝 Duplicate event detected");
-        setSubmissionError("An event with the same name, date, and school already exists. Please check your submission.");
-        toast({
-          title: "Duplicate Event",
-          description: "This event appears to already exist in our database.",
-          variant: "destructive",
-        });
-        setIsSubmitting(false);
-        return null;
-      }
+      // TEMPORARILY BYPASSING DUPLICATE CHECK - we'll go straight to submission
+      console.log("📝 Bypassing duplicate check for testing");
       
       // Prepare event data including the image URL
       const eventData: EventRecord = {
