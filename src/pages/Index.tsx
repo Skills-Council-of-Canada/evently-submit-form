@@ -27,6 +27,9 @@ const Index = () => {
             className="max-w-full h-auto mb-4"
             style={{ maxHeight: "72px" }}
           />
+          <p className="text-center text-gray-700 max-w-2xl mx-auto mt-4 mb-8">
+            The following form is an innovative tool that will capture your events, activities, student, teacher, school successes, and seamless communication back to the PDSB communication's team, instantly transforming your news into marketing content to share.
+          </p>
         </div>
         
         {showEvents && (
