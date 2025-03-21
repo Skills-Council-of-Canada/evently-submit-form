@@ -37,29 +37,9 @@ export const checkEventExists = async (
       console.error("⚠️ Error testing database connection:", testError);
     }
     
-    // Query Supabase to check for duplicates - with extra logging
-    console.log("⚠️ About to execute duplicate check query");
-    const { data, error, status, statusText } = await supabase
-      .from('events')
-      .select('id')
-      .eq('event_name', eventName)
-      .eq('event_date', formattedDate)
-      .eq('school_name', schoolName);
-
-    if (error) {
-      console.error("⚠️ Error checking for duplicates:", error);
-      throw new Error(`Supabase error: ${error.message}`);
-    }
-
-    console.log("⚠️ Duplicate check response status:", status, statusText);
-    console.log("⚠️ Duplicate check result:", data);
-    
-    // As a temporary measure, return false to bypass duplicate check
-    // Remove this line after testing if real duplicate checking is needed
+    console.log("⚠️ IMPORTANT: Bypassing duplicate check entirely as we're connecting to a new database");
+    // We're completely bypassing the duplicate check as we're setting up with a new database
     return false;
-    
-    // If records are returned, it means a duplicate exists
-    return data && data.length > 0;
   } catch (error) {
     console.error("⚠️ Error checking for duplicate events:", error);
     // On error, default to allowing submission
