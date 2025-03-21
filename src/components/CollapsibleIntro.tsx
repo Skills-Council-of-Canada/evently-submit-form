@@ -21,14 +21,16 @@ const CollapsibleIntro = () => {
         onOpenChange={setIsOpen}
         className="border rounded-md p-2 bg-white"
       >
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-600 italic">
-            {isOpen ? "Click to collapse details" : "Click to learn more about this system"}
-          </p>
-          <CollapsibleTrigger className="p-1 rounded-full hover:bg-gray-200 transition-colors">
-            <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""}`} />
-          </CollapsibleTrigger>
-        </div>
+        <CollapsibleTrigger className="w-full">
+          <div className="flex items-center justify-between w-full cursor-pointer">
+            <p className="text-sm text-gray-600 italic text-left">
+              {isOpen ? "Click to collapse details" : "Click to learn more about this system"}
+            </p>
+            <div className="p-1 rounded-full hover:bg-gray-200 transition-colors">
+              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""}`} />
+            </div>
+          </div>
+        </CollapsibleTrigger>
         
         <CollapsibleContent className="mt-2 space-y-3 text-sm">
           <p>
