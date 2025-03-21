@@ -8,10 +8,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon, Clock } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
 import { FormValues } from "../schema";
+import TimePicker from "../components/TimePicker";
 
 export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> }) => {
   return (
@@ -94,15 +95,13 @@ export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> 
               <FormLabel aria-required="true">
                 Event Time *
               </FormLabel>
-              <div className="relative">
-                <FormControl>
-                  <Input
-                    placeholder="6:00 PM - 8:00 PM"
-                    {...field}
-                  />
-                </FormControl>
-                <Clock className="absolute right-3 top-2.5 h-4 w-4 text-gray-400" />
-              </div>
+              <FormControl>
+                <TimePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="6:00 PM - 8:00 PM"
+                />
+              </FormControl>
               <FormDescription>
                 The start and end time of your event
               </FormDescription>
