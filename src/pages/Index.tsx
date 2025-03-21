@@ -16,8 +16,10 @@ const Index = () => {
     // Only show the events section if we have events to display
     if (!isLoading && events && events.length > 0) {
       setShowEvents(true);
+      console.log("Events available to display:", events.length);
     } else if (!isLoading) {
       setShowEvents(false);
+      console.log("No events available to display");
     }
   }, [events, isLoading]);
 
@@ -65,10 +67,18 @@ const Index = () => {
           </Alert>
         )}
         
-        {showEvents && events && events.length > 0 && (
+        {showEvents && events && events.length > 0 ? (
           <div className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Upcoming Events</h2>
             <EventsTable events={events} isLoading={isLoading} error={error} />
+          </div>
+        ) : !isLoading && (
+          <div className="mb-12">
+            <Alert className="mb-6">
+              <AlertDescription>
+                No published events found. Events will appear here after they are approved.
+              </AlertDescription>
+            </Alert>
           </div>
         )}
         
