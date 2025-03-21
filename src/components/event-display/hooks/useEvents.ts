@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { getAllEvents, EventRecord } from "@/services/eventService";
+import { getAllEvents, EventRecord } from "@/services/events";
 
 export function useEvents() {
   const [events, setEvents] = useState<EventRecord[] | null>(null);

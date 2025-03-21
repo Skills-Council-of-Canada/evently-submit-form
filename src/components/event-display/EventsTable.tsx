@@ -1,15 +1,14 @@
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CalendarIcon, Clock, Users, MapPin } from "lucide-react";
-import { EventRecord } from "@/services/eventService";
+import { EventRecord } from "@/services/events";
 
 // Update the component to accept events as props
 interface EventsTableProps {
   events: EventRecord[];
   isLoading: boolean;
-  error: Error | null;
+  error: string | null;
 }
 
 const EventsTable = ({ events, isLoading, error }: EventsTableProps) => {
@@ -38,7 +37,7 @@ const EventsTable = ({ events, isLoading, error }: EventsTableProps) => {
     return (
       <Card className="bg-red-50 border-red-200">
         <CardContent className="p-6">
-          <p className="text-red-500">Error loading events: {error.message}</p>
+          <p className="text-red-500">Error loading events: {error}</p>
         </CardContent>
       </Card>
     );

@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
-import { submitEvent, checkEventExists, EventRecord } from "@/services/eventService";
+import { submitEvent, checkEventExists, EventRecord } from "@/services/events";
 import { uploadEventImage } from "@/services/imageService";
 import { FormValues } from "../schema";
 

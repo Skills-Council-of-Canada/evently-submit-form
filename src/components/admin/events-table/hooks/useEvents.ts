@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
-import { getAllEvents, updateEventStatus, EventRecord } from "@/services/eventService";
+import { getAllEvents, updateEventStatus, EventRecord } from "@/services/events";
 import { ExtendedEventRecord } from "../types";
 
 interface UseEventsProps {

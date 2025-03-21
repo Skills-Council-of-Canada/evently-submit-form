@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { Loader2, Calendar, Users, MapPin } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { getAllEvents, EventRecord } from "@/services/eventService";
+import { getAllEvents, EventRecord } from "@/services/events";
 
 const Events = () => {
   const [events, setEvents] = useState<EventRecord[]>([]);
