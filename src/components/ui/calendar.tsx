@@ -12,8 +12,21 @@ function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  onSelect,
+  mode = "single",
   ...props
 }: CalendarProps) {
+  // Handle auto-closing calendar when a date is selected in single mode
+  const handleSelect = React.useCallback(
+    (date: Date | undefined, selectedDay: Date, activeModifiers: any) => {
+      // Call the original onSelect function if it exists
+      if (onSelect) {
+        onSelect(date, selectedDay, activeModifiers);
+      }
+    },
+    [onSelect]
+  );
+
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -56,6 +69,8 @@ function Calendar({
         IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
       }}
+      onSelect={handleSelect}
+      mode={mode}
       {...props}
     />
   );
