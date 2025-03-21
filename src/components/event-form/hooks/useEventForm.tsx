@@ -17,7 +17,7 @@ export function useEventForm() {
       schoolName: "",
       contactName: "",
       contactEmail: "",
-      eventTime: "",
+      eventTime: "8:00 AM - 9:00 AM", // Default time value
     },
   });
 
@@ -40,6 +40,8 @@ export function useEventForm() {
     if (isSubmitting) return;
     
     console.log("onSubmit called with data:", data);
+    console.log("Event time in submission:", data.eventTime);
+    
     const recordId = await submitForm(data);
     
     if (recordId) {

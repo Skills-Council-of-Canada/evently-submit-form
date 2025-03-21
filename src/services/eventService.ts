@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -25,6 +24,7 @@ export interface EventRecord {
 export const submitEvent = async (eventData: EventRecord): Promise<string | null> => {
   try {
     console.log("Preparing event data for Supabase:", eventData);
+    console.log("Event time being submitted:", eventData.eventTime);
     
     // Handle the Date object conversion properly
     let formattedDate: string;
@@ -51,6 +51,7 @@ export const submitEvent = async (eventData: EventRecord): Promise<string | null
     };
 
     console.log("Inserting record into Supabase:", eventRecord);
+    console.log("Event time in record:", eventRecord.event_time);
 
     // Insert the record into Supabase
     const { data, error } = await supabase

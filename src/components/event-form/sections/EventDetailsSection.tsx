@@ -17,6 +17,16 @@ import TimePicker from "../components/TimePicker";
 export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> }) => {
   const [calendarOpen, setCalendarOpen] = useState(false);
 
+  // Make sure the eventTime has a default value if it's not set
+  React.useEffect(() => {
+    const currentTime = form.getValues("eventTime");
+    if (!currentTime) {
+      const defaultTime = "8:00 AM - 9:00 AM";
+      form.setValue("eventTime", defaultTime);
+      console.log("Set default event time:", defaultTime);
+    }
+  }, [form]);
+
   return (
     <div className="form-section">
       <h2 className="form-subtitle">Event Details</h2>
@@ -104,7 +114,10 @@ export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> 
               <FormControl>
                 <TimePicker
                   value={field.value}
-                  onChange={field.onChange}
+                  onChange={(value) => {
+                    console.log("TimePicker onChange called with:", value);
+                    field.onChange(value);
+                  }}
                   placeholder="Select start and end times"
                 />
               </FormControl>

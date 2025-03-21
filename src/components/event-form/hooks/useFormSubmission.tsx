@@ -28,6 +28,9 @@ export function useFormSubmission() {
       // Format the date properly - this is critical
       const eventDate = data.eventDate instanceof Date ? data.eventDate : new Date(data.eventDate);
       
+      // Ensure eventTime is properly formatted
+      console.log("Event time from form:", data.eventTime);
+      
       // Check for duplicate event with properly formatted date
       const isDuplicate = await checkEventExists(
         data.eventName,
@@ -51,7 +54,7 @@ export function useFormSubmission() {
       const eventData: EventRecord = {
         eventName: data.eventName,
         eventDate: eventDate,
-        eventTime: data.eventTime,
+        eventTime: data.eventTime, // Ensure this is passed correctly
         description: data.description,
         schoolName: data.schoolName,
         contactName: data.contactName,
@@ -61,6 +64,7 @@ export function useFormSubmission() {
       };
       
       console.log("Submitting event to database:", eventData);
+      console.log("Event time being sent to database:", eventData.eventTime);
       
       // Submit the event with image URL
       const recordId = await submitEvent(eventData);

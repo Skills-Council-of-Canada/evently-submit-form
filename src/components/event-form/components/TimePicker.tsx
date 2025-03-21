@@ -1,12 +1,11 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Clock } from "lucide-react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
@@ -47,7 +46,7 @@ const TimePicker = ({ value, onChange, placeholder = "Select time" }: TimePicker
   const periods = ["AM", "PM"];
 
   // Parse existing value when component mounts or value changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (value) {
       const timePattern = /(\d{1,2}):(\d{2}) (AM|PM) - (\d{1,2}):(\d{2}) (AM|PM)/;
       const match = value.match(timePattern);
@@ -71,9 +70,18 @@ const TimePicker = ({ value, onChange, placeholder = "Select time" }: TimePicker
     setTimeValue(updatedTimeValue);
     
     const formattedTime = `${updatedTimeValue.startHour}:${updatedTimeValue.startMinute} ${updatedTimeValue.startPeriod} - ${updatedTimeValue.endHour}:${updatedTimeValue.endMinute} ${updatedTimeValue.endPeriod}`;
-    
+    console.log("Setting formatted time:", formattedTime);
     onChange(formattedTime);
   };
+  
+  // If the component loads without a value, initialize with default time
+  useEffect(() => {
+    if (!value) {
+      const defaultTime = `${timeValue.startHour}:${timeValue.startMinute} ${timeValue.startPeriod} - ${timeValue.endHour}:${timeValue.endMinute} ${timeValue.endPeriod}`;
+      console.log("Setting default time:", defaultTime);
+      onChange(defaultTime);
+    }
+  }, []);
   
   return (
     <Popover open={open} onOpenChange={setOpen}>
