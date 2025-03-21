@@ -23,7 +23,7 @@ const EventForm = () => {
     handleReset
   } = useEventForm();
 
-  // Added explicit event parameter and preventDefault
+  // Fixed event handler to properly prevent default form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     form.handleSubmit(onSubmit)(e);

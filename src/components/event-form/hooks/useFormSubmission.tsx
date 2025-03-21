@@ -15,6 +15,8 @@ export function useFormSubmission() {
     setSubmissionError(null);
     
     try {
+      console.log("Submitting form with data:", data);
+      
       // Check for duplicate event
       const isDuplicate = await checkEventExists(
         data.eventName,
@@ -41,7 +43,6 @@ export function useFormSubmission() {
       }
       
       // Prepare event data including the image URL
-      // Fix: Explicitly cast the data as EventRecord type and add the imageUrl
       const eventData: EventRecord = {
         eventName: data.eventName,
         eventDate: data.eventDate,
@@ -54,10 +55,13 @@ export function useFormSubmission() {
         imageUrl: imageUrl
       };
       
+      console.log("Submitting event to database:", eventData);
+      
       // Submit the event with image URL
       const recordId = await submitEvent(eventData);
       
       if (recordId) {
+        console.log("Event submitted successfully with ID:", recordId);
         setIsSuccess(true);
         toast({
           title: "Event Submitted!",

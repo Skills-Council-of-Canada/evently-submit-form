@@ -12,7 +12,7 @@ export interface EventRecord {
   contactName: string;
   contactEmail: string;
   audienceType: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   status?: 'pending' | 'approved' | 'published';
   createdAt?: string;
 }
@@ -24,6 +24,8 @@ export interface EventRecord {
  */
 export const submitEvent = async (eventData: EventRecord): Promise<string | null> => {
   try {
+    console.log("Preparing event data for Supabase:", eventData);
+    
     // Prepare the data for Supabase
     const eventRecord = {
       event_name: eventData.eventName,
@@ -35,9 +37,11 @@ export const submitEvent = async (eventData: EventRecord): Promise<string | null
       contact_email: eventData.contactEmail,
       audience_type: eventData.audienceType,
       image_url: eventData.imageUrl || null,
-      status: "pending" as 'pending', // Explicitly type as literal
+      status: "pending",
       created_at: new Date().toISOString()
     };
+
+    console.log("Inserting record into Supabase:", eventRecord);
 
     // Insert the record into Supabase
     const { data, error } = await supabase
