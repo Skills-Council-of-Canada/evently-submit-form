@@ -12,12 +12,39 @@ const Index = () => {
   
   useEffect(() => {
     // Only show the events section if we have events to display
-    if (!isLoading && events.length > 0) {
+    if (!isLoading && events && events.length > 0) {
       setShowEvents(true);
-    } else {
+    } else if (!isLoading) {
       setShowEvents(false);
     }
   }, [events, isLoading]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 py-12 px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex flex-col items-center mb-8">
+            <img 
+              src="/lovable-uploads/c368798b-3714-434f-88b4-7f1f86a2fa1f.png" 
+              alt="Peel District School Board Logo" 
+              className="max-w-full h-auto mb-12"
+              style={{ maxHeight: "72px" }}
+            />
+            
+            <div className="mb-10">
+              <BenefitBoxes />
+            </div>
+            
+            <CollapsibleIntro />
+          </div>
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
+            <div className="h-64 bg-gray-200 rounded mb-8"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 py-12 px-4 sm:px-6">
