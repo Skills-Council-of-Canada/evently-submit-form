@@ -26,10 +26,22 @@ export const submitEvent = async (eventData: EventRecord): Promise<string | null
   try {
     console.log("Preparing event data for Supabase:", eventData);
     
+    // Handle the Date object conversion properly
+    let formattedDate: string;
+    if (eventData.eventDate instanceof Date) {
+      formattedDate = eventData.eventDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+    } else if (typeof eventData.eventDate === 'object' && eventData.eventDate._type === 'Date') {
+      // Handle special Date object format from form
+      formattedDate = eventData.eventDate.value.iso.split('T')[0];
+    } else {
+      // Fallback to string conversion
+      formattedDate = String(eventData.eventDate).split('T')[0];
+    }
+    
     // Prepare the data for Supabase
     const eventRecord = {
       event_name: eventData.eventName,
-      event_date: eventData.eventDate.toISOString().split('T')[0], // Format as YYYY-MM-DD
+      event_date: formattedDate,
       event_time: eventData.eventTime,
       description: eventData.description,
       school_name: eventData.schoolName,
