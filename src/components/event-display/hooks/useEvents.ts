@@ -45,6 +45,7 @@ export function useEvents() {
       } catch (err) {
         console.error("Error fetching events:", err);
         setError(err instanceof Error ? err : new Error('Failed to fetch events'));
+        setEvents([]); // Ensure events is always an array even on error
       } finally {
         setIsLoading(false);
       }

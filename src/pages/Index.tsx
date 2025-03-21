@@ -6,6 +6,7 @@ import { useEvents } from "@/components/event-display/hooks/useEvents";
 import BenefitBoxes from "@/components/BenefitBoxes";
 import CollapsibleIntro from "@/components/CollapsibleIntro";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Index = () => {
   const { events, isLoading, error } = useEvents();
@@ -20,24 +21,28 @@ const Index = () => {
     }
   }, [events, isLoading]);
 
+  const renderHeader = () => (
+    <div className="flex flex-col items-center mb-8">
+      <img 
+        src="/lovable-uploads/c368798b-3714-434f-88b4-7f1f86a2fa1f.png" 
+        alt="Peel District School Board Logo" 
+        className="max-w-full h-auto mb-12"
+        style={{ maxHeight: "72px" }}
+      />
+      
+      <div className="mb-10">
+        <BenefitBoxes />
+      </div>
+      
+      <CollapsibleIntro />
+    </div>
+  );
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 py-12 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="flex flex-col items-center mb-8">
-            <img 
-              src="/lovable-uploads/c368798b-3714-434f-88b4-7f1f86a2fa1f.png" 
-              alt="Peel District School Board Logo" 
-              className="max-w-full h-auto mb-12"
-              style={{ maxHeight: "72px" }}
-            />
-            
-            <div className="mb-10">
-              <BenefitBoxes />
-            </div>
-            
-            <CollapsibleIntro />
-          </div>
+          {renderHeader()}
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
             <div className="h-64 bg-gray-200 rounded mb-8"></div>
@@ -47,30 +52,20 @@ const Index = () => {
     );
   }
 
-  // Handle error state 
-  if (error) {
-    console.error("Error loading events:", error);
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 py-12 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
-        <div className="flex flex-col items-center mb-8">
-          <img 
-            src="/lovable-uploads/c368798b-3714-434f-88b4-7f1f86a2fa1f.png" 
-            alt="Peel District School Board Logo" 
-            className="max-w-full h-auto mb-12"
-            style={{ maxHeight: "72px" }}
-          />
-          
-          <div className="mb-10">
-            <BenefitBoxes />
-          </div>
-          
-          <CollapsibleIntro />
-        </div>
+        {renderHeader()}
         
-        {showEvents && (
+        {error && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertDescription>
+              There was a problem loading events. Please try again later.
+            </AlertDescription>
+          </Alert>
+        )}
+        
+        {showEvents && events && events.length > 0 && (
           <div className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Upcoming Events</h2>
             <EventsTable />
