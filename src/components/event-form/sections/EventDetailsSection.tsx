@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,6 +15,8 @@ import { FormValues } from "../schema";
 import TimePicker from "../components/TimePicker";
 
 export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> }) => {
+  const [calendarOpen, setCalendarOpen] = useState(false);
+
   return (
     <div className="form-section">
       <h2 className="form-subtitle">Event Details</h2>
@@ -47,7 +49,7 @@ export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> 
               <FormLabel aria-required="true">
                 Event Date *
               </FormLabel>
-              <Popover>
+              <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
@@ -70,7 +72,10 @@ export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> 
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
+                    onSelect={(date) => {
+                      field.onChange(date);
+                      setCalendarOpen(false); // Close the calendar when a date is selected
+                    }}
                     disabled={(date) =>
                       date < new Date(new Date().setHours(0, 0, 0, 0))
                     }

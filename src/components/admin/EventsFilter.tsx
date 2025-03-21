@@ -44,6 +44,7 @@ export function EventsFilter({
 }: EventsFilterProps) {
   const [schools, setSchools] = useState<School[]>([]);
   const [isLoadingSchools, setIsLoadingSchools] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const hasActiveFilters = searchQuery || selectedSchool || selectedStatus || dateRange.from || dateRange.to;
 
   // Fetch schools from Supabase when component mounts
@@ -127,7 +128,7 @@ export function EventsFilter({
           </SelectContent>
         </Select>
 
-        <Popover>
+        <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
@@ -162,9 +163,13 @@ export function EventsFilter({
                   from: range?.from,
                   to: range?.to,
                 });
+                // Close the calendar if a complete range is selected
+                if (range?.from && range?.to) {
+                  setCalendarOpen(false);
+                }
               }}
               numberOfMonths={2}
-              className={cn("p-3 pointer-events-auto")}
+              className="p-3 pointer-events-auto"
             />
           </PopoverContent>
         </Popover>
