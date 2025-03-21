@@ -25,10 +25,13 @@ export function useFormSubmission() {
         console.log("Image uploaded successfully:", imageUrl);
       }
       
-      // Check for duplicate event
+      // Format the date properly - this is critical
+      const eventDate = data.eventDate instanceof Date ? data.eventDate : new Date(data.eventDate);
+      
+      // Check for duplicate event with properly formatted date
       const isDuplicate = await checkEventExists(
         data.eventName,
-        data.eventDate,
+        eventDate,
         data.schoolName
       );
       
@@ -47,7 +50,7 @@ export function useFormSubmission() {
       // Prepare event data including the image URL
       const eventData: EventRecord = {
         eventName: data.eventName,
-        eventDate: data.eventDate,
+        eventDate: eventDate,
         eventTime: data.eventTime,
         description: data.description,
         schoolName: data.schoolName,

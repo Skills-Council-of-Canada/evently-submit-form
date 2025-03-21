@@ -92,7 +92,9 @@ export const checkEventExists = async (
 ): Promise<boolean> => {
   try {
     // Format the date to YYYY-MM-DD for filtering
-    const formattedDate = eventDate.toISOString().split('T')[0];
+    const formattedDate = eventDate instanceof Date 
+      ? eventDate.toISOString().split('T')[0]
+      : String(eventDate).split('T')[0];
     
     console.log(`Checking for duplicate event with name: ${eventName}, date: ${formattedDate}, school: ${schoolName}`);
     

@@ -60,7 +60,7 @@ export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> 
                       )}
                     >
                       {field.value ? (
-                        format(field.value, "PPP")
+                        format(new Date(field.value), "PPP")
                       ) : (
                         <span>Select date</span>
                       )}
@@ -71,7 +71,7 @@ export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> 
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={field.value}
+                    selected={field.value ? new Date(field.value) : undefined}
                     onSelect={(date) => {
                       field.onChange(date);
                       // Close the calendar when a date is selected
