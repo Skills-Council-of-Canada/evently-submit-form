@@ -64,6 +64,15 @@ export function EventsFilter({
     fetchSchools();
   }, []);
 
+  // Handle range selection completion
+  const handleRangeSelect = (range: { from: Date | undefined; to: Date | undefined }) => {
+    onDateFilter(range);
+    // Close the calendar when a complete range is selected (both from and to dates)
+    if (range.from && range.to) {
+      setCalendarOpen(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col md:flex-row gap-4">
@@ -158,16 +167,7 @@ export function EventsFilter({
                 from: dateRange.from,
                 to: dateRange.to,
               }}
-              onSelect={(range) => {
-                onDateFilter({
-                  from: range?.from,
-                  to: range?.to,
-                });
-                // Close the calendar if a complete range is selected
-                if (range?.from && range?.to) {
-                  setCalendarOpen(false);
-                }
-              }}
+              onSelect={handleRangeSelect}
               numberOfMonths={2}
               className="p-3 pointer-events-auto"
             />

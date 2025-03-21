@@ -74,7 +74,8 @@ export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> 
                     selected={field.value}
                     onSelect={(date) => {
                       field.onChange(date);
-                      setCalendarOpen(false); // Close the calendar when a date is selected
+                      // Close the calendar when a date is selected
+                      setCalendarOpen(false);
                     }}
                     disabled={(date) =>
                       date < new Date(new Date().setHours(0, 0, 0, 0))
