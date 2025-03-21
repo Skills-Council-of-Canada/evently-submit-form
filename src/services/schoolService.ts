@@ -72,7 +72,8 @@ export const searchSchools = async (query: string): Promise<School[]> => {
       .from('schools')
       .select('*')
       .or(`school_name.ilike.%${query}%, school.ilike.%${query}%`)
-      .order('school_name', { ascending: true });
+      .order('school_name', { ascending: true })
+      .limit(20); // Limiting results for better performance
     
     if (error) {
       console.error("Error searching schools:", error);

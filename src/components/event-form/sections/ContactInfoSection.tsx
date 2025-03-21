@@ -2,18 +2,15 @@
 import React from "react";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
 import { FormValues } from "../schema";
-import { School } from "@/services/schoolService";
+import { SchoolSearchInput } from "../components/SchoolSearchInput";
 
 interface ContactInfoSectionProps {
   form: UseFormReturn<FormValues>;
-  schools: School[];
-  isLoadingSchools: boolean;
 }
 
-export const ContactInfoSection = ({ form, schools, isLoadingSchools }: ContactInfoSectionProps) => {
+export const ContactInfoSection = ({ form }: ContactInfoSectionProps) => {
   return (
     <div className="form-section">
       <h2 className="form-subtitle">School & Contact Information</h2>
@@ -28,30 +25,10 @@ export const ContactInfoSection = ({ form, schools, isLoadingSchools }: ContactI
                 School Name *
               </FormLabel>
               <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a school" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {isLoadingSchools ? (
-                      <SelectItem value="loading" disabled>Loading schools...</SelectItem>
-                    ) : (
-                      (schools || [])
-                        .filter(school => school && school.school_name && school.school_name.trim() !== "")
-                        .map((school) => (
-                          <SelectItem 
-                            key={school.id || school.school_name} 
-                            value={school.school_name}
-                          >
-                            {school.school_name}
-                          </SelectItem>
-                        ))
-                    )}
-                  </SelectContent>
-                </Select>
+                <SchoolSearchInput 
+                  value={field.value}
+                  onChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

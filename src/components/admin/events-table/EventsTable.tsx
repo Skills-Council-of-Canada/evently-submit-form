@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
 import { EventRow } from "./EventRow";
 import { EventDetailsSheet } from "./EventDetailsSheet";
 import { EventsTableProps, ExtendedEventRecord } from "./types";
@@ -28,7 +29,7 @@ export function EventsTable({
   const eventsPerPage = 5;
   const { toast } = useToast();
 
-  const { filteredEvents, handleDelete, handleApprove, handlePublish } = useEvents({
+  const { filteredEvents, isLoading, handleDelete, handleApprove, handlePublish } = useEvents({
     searchQuery,
     selectedSchool,
     selectedStatus,
@@ -48,32 +49,29 @@ export function EventsTable({
 
   const handleEventDelete = (eventId: string) => {
     handleDelete(eventId);
-    toast({
-      title: "Event Deleted",
-      description: "The event has been successfully deleted.",
-    });
   };
 
   const handleEventApprove = (eventId: string) => {
     handleApprove(eventId);
-    toast({
-      title: "Event Approved",
-      description: "The event has been approved and is ready for publishing.",
-    });
   };
 
   const handleEventPublish = (eventId: string) => {
     handlePublish(eventId);
-    toast({
-      title: "Event Published",
-      description: "The event has been published to the public calendar.",
-    });
   };
 
   const handleViewDetails = (event: ExtendedEventRecord) => {
     setSelectedEvent(event);
     setDetailsOpen(true);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-2 text-lg">Loading events...</span>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -107,11 +105,13 @@ export function EventsTable({
         </Table>
       </div>
 
-      <EventsPagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+      {filteredEvents.length > 0 && (
+        <EventsPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      )}
 
       <EventDetailsSheet
         open={detailsOpen}

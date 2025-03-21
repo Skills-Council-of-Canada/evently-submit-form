@@ -1,8 +1,8 @@
 
-import { EventRecord } from "@/services/airtableService";
+import { EventRecord } from "@/services/eventService";
 
-export interface ExtendedEventRecord extends EventRecord {
-  id: string;
+export interface ExtendedEventRecord extends Omit<EventRecord, 'id'> {
+  id: string; // Make id required
   status: "pending" | "approved" | "published";
   contentGenerated?: boolean;
 }

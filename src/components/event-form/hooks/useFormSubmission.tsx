@@ -1,8 +1,8 @@
 
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
-import { submitEventToAirtable, checkEventExists, EventRecord } from "@/services/airtableService";
-import { notifyNewEventSubmission } from "@/services/airtable/notificationService";
+import { submitEvent, checkEventExists, EventRecord } from "@/services/eventService";
+import { uploadEventImage } from "@/services/imageService";
 import { FormValues } from "../schema";
 
 export function useFormSubmission() {
@@ -15,6 +15,7 @@ export function useFormSubmission() {
     setSubmissionError(null);
     
     try {
+      // Check for duplicate event
       const isDuplicate = await checkEventExists(
         data.eventName,
         data.eventDate,
@@ -32,16 +33,35 @@ export function useFormSubmission() {
         return null;
       }
       
-      const recordId = await submitEventToAirtable(data as EventRecord);
+      // Handle image upload if an image was selected
+      let imageUrl = null;
+      if (data.eventImage && data.eventImage.length > 0) {
+        const imageFile = data.eventImage[0];
+        imageUrl = await uploadEventImage(imageFile);
+      }
+      
+      // Prepare event data including the image URL
+      // Fix: Explicitly cast the data as EventRecord type and add the imageUrl
+      const eventData: EventRecord = {
+        eventName: data.eventName,
+        eventDate: data.eventDate,
+        eventTime: data.eventTime,
+        description: data.description,
+        schoolName: data.schoolName,
+        contactName: data.contactName,
+        contactEmail: data.contactEmail,
+        audienceType: data.audienceType,
+        imageUrl: imageUrl
+      };
+      
+      // Submit the event with image URL
+      const recordId = await submitEvent(eventData);
       
       if (recordId) {
-        // Send notifications about the new event submission
-        await notifyNewEventSubmission(data as EventRecord, recordId);
-        
         setIsSuccess(true);
         toast({
           title: "Event Submitted!",
-          description: "Your event has been successfully added to our database and the communications team has been notified.",
+          description: "Your event has been successfully added to our database.",
         });
         return recordId;
       } else {
