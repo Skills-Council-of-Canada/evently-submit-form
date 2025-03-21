@@ -19,7 +19,7 @@ const CollapsibleIntro = () => {
       <Collapsible
         open={isOpen}
         onOpenChange={setIsOpen}
-        className="border rounded-md p-2 bg-[#FEF7CD]"
+        className="border rounded-md p-2 bg-white"
       >
         <div className="flex items-center justify-between">
           <p className="text-sm text-gray-600 italic">
