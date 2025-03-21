@@ -22,7 +22,7 @@ const CollapsibleIntro = () => {
         className="border rounded-md p-2 bg-slate-50"
       >
         <div className="flex items-center justify-between">
-          <p className="text-sm text-[#D3E4FD]">
+          <p className="text-sm text-gray-600 italic">
             {isOpen ? "Click to collapse details" : "Click to learn more about this system"}
           </p>
           <CollapsibleTrigger className="p-1 rounded-full hover:bg-gray-200 transition-colors">
