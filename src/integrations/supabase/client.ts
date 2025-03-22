@@ -3,9 +3,9 @@
 import { createClient } from '@supabase/supabase-js';
 import type { ExtendedDatabase } from './schema';
 
-// Updated to use direct values since process.env is not available in browser context
-const SUPABASE_URL = "https://ravfxsqfccftbdaqefvl.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhdmZ4c3FmY2NmdGJkYXFlZnZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI0OTUwNzMsImV4cCI6MjA1ODA3MTA3M30.m-oomY_UcqznlIVCSNoCckxHqD_JeYeXNNrjnfJavu8";
+// Updated to use correct Supabase project
+const SUPABASE_URL = "https://uqwvovfezjjlrnvtapmt.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxd3ZvdmZlempqbHJudnRhcG10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE5MzkxNDYsImV4cCI6MjA1NzUxNTE0Nn0.48eFh1F3nODzJ0_iZ8-FQrKmXUnCJVrYg7Yh6HNPxs4";
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
