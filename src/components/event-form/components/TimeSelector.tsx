@@ -32,9 +32,9 @@ const TimeSelector = ({
   const periods = ["AM", "PM"];
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 w-full">
       <Label className="font-medium text-gray-700">{title}</Label>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 gap-3 w-full min-w-[240px]">
         <TimeDropdown
           value={hour}
           onChange={onHourChange}
@@ -73,10 +73,10 @@ const TimeDropdown = ({ value, onChange, options, placeholder }: TimeDropdownPro
       value={value}
       onValueChange={onChange}
     >
-      <SelectTrigger>
+      <SelectTrigger className="w-full">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="min-w-[100px]">
         {options.map((option) => (
           <SelectItem key={`${placeholder}-${option}`} value={option}>
             {option}
@@ -88,3 +88,4 @@ const TimeDropdown = ({ value, onChange, options, placeholder }: TimeDropdownPro
 };
 
 export default TimeSelector;
+

@@ -42,7 +42,7 @@ const TimePicker = ({ value, onChange, placeholder = "Select time" }: TimePicker
           <Clock className="absolute right-3 top-2.5 h-4 w-4 text-gray-400 pointer-events-none" />
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-96 p-4" align="start">
+      <PopoverContent className="w-[480px] p-4" align="start">
         <div className="grid grid-cols-2 gap-6">
           <TimeSelector 
             title="Start Time"
@@ -92,3 +92,4 @@ const TimePicker = ({ value, onChange, placeholder = "Select time" }: TimePicker
 };
 
 export default TimePicker;
+
