@@ -9,9 +9,7 @@ export const formSchema = z.object({
   eventDate: z.date({
     required_error: "Event date is required.",
   }),
-  eventTime: z.string().min(1, {
-    message: "Event time is required.",
-  }),
+  eventTime: z.string().optional(),
   eventLocation: z.string().optional(),
   estimatedAttendance: z.string().optional(),
   description: z.string().min(10, {

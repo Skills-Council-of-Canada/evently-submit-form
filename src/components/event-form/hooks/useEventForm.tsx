@@ -1,4 +1,3 @@
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formSchema, FormValues } from "../schema";
@@ -17,7 +16,6 @@ export function useEventForm() {
       schoolName: "",
       contactName: "",
       contactEmail: "",
-      eventTime: "8:00 AM - 9:00 AM", // Default time value
       eventLocation: "",
       estimatedAttendance: "",
       participants: "",
@@ -50,7 +48,6 @@ export function useEventForm() {
     if (isSubmitting) return;
     
     console.log("onSubmit called with data:", data);
-    console.log("Event time in submission:", data.eventTime);
     
     const recordId = await submitForm(data);
     

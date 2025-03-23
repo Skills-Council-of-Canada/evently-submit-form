@@ -8,21 +8,10 @@ import {
   EventLocationField,
   AudienceTypeField,
   EstimatedAttendanceField,
-  EventDescriptionField,
-  EventTimeField
+  EventDescriptionField
 } from "../components/event-details";
 
 export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> }) => {
-  // Make sure the eventTime has a default value if it's not set
-  useEffect(() => {
-    const currentTime = form.getValues("eventTime");
-    if (!currentTime) {
-      const defaultTime = "8:00 AM - 9:00 AM";
-      form.setValue("eventTime", defaultTime);
-      console.log("Set default event time:", defaultTime);
-    }
-  }, [form]);
-
   return (
     <div className="form-section">
       <h2 className="form-subtitle">Event Details</h2>
@@ -33,7 +22,6 @@ export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> 
         <EventLocationField form={form} />
         <AudienceTypeField form={form} />
         <EstimatedAttendanceField form={form} />
-        <EventTimeField form={form} />
       </div>
       
       <div className="mt-6">
