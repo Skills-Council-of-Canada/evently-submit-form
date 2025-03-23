@@ -1,3 +1,4 @@
+
 import React from "react";
 import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import TimeSelector from "./TimeSelector";
@@ -56,12 +57,12 @@ const InlineTimeField = ({ form, required = true }: InlineTimeFieldProps) => {
   };
   
   return (
-    <FormItem>
+    <FormItem className="w-full">
       <FormLabel aria-required={required ? "true" : "false"}>
         Event Time {required && "*"}
       </FormLabel>
       <FormControl>
-        <div className="relative grid grid-cols-2 gap-6 py-5 px-6 rounded-md border border-input bg-background">
+        <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 py-6 px-8 rounded-md border border-input bg-background">
           <div className="flex flex-col">
             <div className="flex items-center mb-3">
               <Clock className="h-4 w-4 text-gray-500 mr-2" />
