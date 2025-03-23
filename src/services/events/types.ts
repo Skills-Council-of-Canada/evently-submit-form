@@ -9,6 +9,7 @@ export interface EventRecord {
   contactName: string;
   contactEmail: string;
   audienceType: string;
+  submissionDate?: Date;
   imageUrl?: string | null;
   status?: 'pending' | 'approved' | 'published';
   createdAt?: string;

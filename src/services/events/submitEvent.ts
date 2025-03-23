@@ -46,6 +46,7 @@ const prepareEventForSupabase = (eventData: EventRecord) => {
     contact_name: eventData.contactName,
     contact_email: eventData.contactEmail,
     audience_type: eventData.audienceType,
+    submission_date: eventData.submissionDate ? formatEventDate(eventData.submissionDate) : formatEventDate(new Date()),
     image_url: eventData.imageUrl || null,
     status: "pending" as const,
     created_at: new Date().toISOString()

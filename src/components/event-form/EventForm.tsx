@@ -4,7 +4,8 @@ import { Form } from "@/components/ui/form";
 import { 
   EventDetailsSection, 
   ContactInfoSection, 
-  EventImageSection 
+  EventImageSection,
+  SubmissionDateSection
 } from "./sections";
 import SuccessMessage from "./SuccessMessage";
 import FormHeader from "./FormHeader";
@@ -61,6 +62,8 @@ const EventForm = () => {
             <FormHeader submissionError={submissionError} />
 
             <EventDetailsSection form={form} />
+            
+            <SubmissionDateSection form={form} />
             
             <ContactInfoSection form={form} />
             

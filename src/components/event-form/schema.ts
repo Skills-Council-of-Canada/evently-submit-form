@@ -29,6 +29,7 @@ export const formSchema = z.object({
   audienceType: z.string({
     required_error: "Please select an audience type.",
   }),
+  submissionDate: z.date(),
   eventImage: z.instanceof(FileList).optional(),
 });
 

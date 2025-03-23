@@ -59,6 +59,7 @@ export function useFormSubmission() {
         contactName: data.contactName,
         contactEmail: data.contactEmail,
         audienceType: data.audienceType,
+        submissionDate: data.submissionDate,
         imageUrl: imageUrl
       };
       
