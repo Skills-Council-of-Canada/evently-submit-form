@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
 import { getAllEvents, updateEventStatus, EventRecord } from "@/services/events";
@@ -45,8 +44,7 @@ export const useEvents = ({
             notableAchievements: event.notableAchievements,
             imagePermission: event.imagePermission,
             suggestedCaption: event.suggestedCaption,
-            contentHighlight: event.contentHighlight,
-            messageTone: event.messageTone
+            contentHighlight: event.contentHighlight
           }));
         setEvents(extendedEvents);
       } catch (error) {

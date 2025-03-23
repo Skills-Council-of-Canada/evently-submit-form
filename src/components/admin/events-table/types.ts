@@ -1,5 +1,4 @@
-
-import { EventRecord } from "@/services/eventService";
+import { EventRecord } from "@/services/events";
 
 export interface ExtendedEventRecord extends Omit<EventRecord, 'id'> {
   id: string; // Make id required
@@ -12,7 +11,6 @@ export interface ExtendedEventRecord extends Omit<EventRecord, 'id'> {
   imagePermission?: boolean;
   suggestedCaption?: string;
   contentHighlight?: string;
-  messageTone?: string;
 }
 
 export interface EventsTableProps {
