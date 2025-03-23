@@ -28,7 +28,7 @@ const TimeSelector = ({
   return (
     <div className="space-y-2 w-full">
       <Label className="font-medium text-gray-700">{title}</Label>
-      <div className="grid grid-cols-3 gap-2 w-full min-w-[240px] bg-gray-100 p-4 rounded-md">
+      <div className="grid grid-cols-3 gap-2 w-full min-w-[240px] bg-event-light-purple/30 p-4 rounded-md">
         <div className="w-full">
           <TimeDropdown
             value={hour}
