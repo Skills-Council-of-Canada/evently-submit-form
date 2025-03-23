@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -111,6 +112,6 @@
   }
 
   .section-bg {
-    @apply bg-event-light-purple/10 rounded-lg border border-event-light-purple/20 p-6 shadow-sm;
+    @apply bg-blue-50 rounded-lg border border-blue-200 p-6 shadow-sm;
   }
 }
