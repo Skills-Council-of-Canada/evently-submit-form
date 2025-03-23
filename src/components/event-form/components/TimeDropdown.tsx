@@ -18,7 +18,7 @@ const TimeDropdown = ({ value, onChange, options, placeholder }: TimeDropdownPro
       <SelectTrigger className="w-full bg-white border-gray-200">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent className="min-w-[120px] bg-white">
+      <SelectContent className="min-w-[120px] w-full bg-white z-50">
         {options.map((option) => (
           <SelectItem key={`${placeholder}-${option}`} value={option}>
             {option}
