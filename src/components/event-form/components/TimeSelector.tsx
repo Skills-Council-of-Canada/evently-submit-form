@@ -28,27 +28,33 @@ const TimeSelector = ({
   return (
     <div className="space-y-2 w-full">
       <Label className="font-medium text-gray-700">{title}</Label>
-      <div className="grid grid-cols-3 gap-3 w-full min-w-[240px] bg-gray-100 p-4 rounded-md">
-        <TimeDropdown
-          value={hour}
-          onChange={onHourChange}
-          options={hours}
-          placeholder="Hour"
-        />
+      <div className="grid grid-cols-3 gap-2 w-full min-w-[240px] bg-gray-100 p-4 rounded-md">
+        <div className="w-full">
+          <TimeDropdown
+            value={hour}
+            onChange={onHourChange}
+            options={hours}
+            placeholder="Hour"
+          />
+        </div>
         
-        <TimeDropdown
-          value={minute}
-          onChange={onMinuteChange}
-          options={minutes}
-          placeholder="Minute"
-        />
+        <div className="w-full">
+          <TimeDropdown
+            value={minute}
+            onChange={onMinuteChange}
+            options={minutes}
+            placeholder="Minute"
+          />
+        </div>
         
-        <TimeDropdown
-          value={period}
-          onChange={onPeriodChange}
-          options={periods}
-          placeholder="AM/PM"
-        />
+        <div className="w-full">
+          <TimeDropdown
+            value={period}
+            onChange={onPeriodChange}
+            options={periods}
+            placeholder="AM/PM"
+          />
+        </div>
       </div>
     </div>
   );
