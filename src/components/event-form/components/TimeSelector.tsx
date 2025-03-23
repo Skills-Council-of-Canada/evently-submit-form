@@ -36,13 +36,14 @@ const TimeSelector = ({
   return (
     <div className="space-y-2">
       {showLabel && <Label className="font-medium text-gray-700">{title}</Label>}
-      <div className="grid grid-cols-3 gap-1">
+      <div className="grid grid-cols-3 gap-2">
         <div className="flex-1">
           <TimeDropdown
             value={hour}
             onChange={onHourChange}
             options={hours}
             placeholder="Hour"
+            width="min-w-[80px]"
           />
         </div>
         
@@ -52,6 +53,7 @@ const TimeSelector = ({
             onChange={onMinuteChange}
             options={minutes}
             placeholder="Minute"
+            width="min-w-[80px]"
           />
         </div>
         
@@ -61,6 +63,7 @@ const TimeSelector = ({
             onChange={onPeriodChange}
             options={periods}
             placeholder="AM/PM"
+            width="min-w-[80px]"
           />
         </div>
       </div>
@@ -73,9 +76,10 @@ interface TimeDropdownProps {
   onChange: (value: string) => void;
   options: string[];
   placeholder: string;
+  width?: string;
 }
 
-const TimeDropdown = ({ value, onChange, options, placeholder }: TimeDropdownProps) => {
+const TimeDropdown = ({ value, onChange, options, placeholder, width = "min-w-[80px]" }: TimeDropdownProps) => {
   return (
     <Select
       value={value}
@@ -85,7 +89,7 @@ const TimeDropdown = ({ value, onChange, options, placeholder }: TimeDropdownPro
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent
-        className="w-full z-50 bg-white"
+        className={`${width} z-50 bg-white`}
         position="popper"
         side="top"
         sideOffset={4}
