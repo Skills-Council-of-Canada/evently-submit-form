@@ -73,7 +73,6 @@ interface TimeDropdownProps {
   onChange: (value: string) => void;
   options: string[];
   placeholder: string;
-  width?: string;
 }
 
 const TimeDropdown = ({ value, onChange, options, placeholder }: TimeDropdownProps) => {
@@ -86,12 +85,13 @@ const TimeDropdown = ({ value, onChange, options, placeholder }: TimeDropdownPro
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent
-        className="bg-white w-full"
+        className="min-w-[5rem] bg-white"
         position="popper"
+        align="center"
         sideOffset={4}
       >
         {options.map((option) => (
-          <SelectItem key={`${placeholder}-${option}`} value={option}>
+          <SelectItem key={`${placeholder}-${option}`} value={option} className="px-4 py-2">
             {option}
           </SelectItem>
         ))}
