@@ -5,3 +5,4 @@ export * from "./EventLocationField";
 export * from "./AudienceTypeField";
 export * from "./EstimatedAttendanceField";
 export * from "./EventDescriptionField";
+export * from "./EventTimeField";

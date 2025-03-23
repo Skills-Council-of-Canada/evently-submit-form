@@ -36,14 +36,14 @@ const TimeSelector = ({
   return (
     <div className="space-y-2">
       {showLabel && <Label className="font-medium text-gray-700">{title}</Label>}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-2">
         <div className="flex-1">
           <TimeDropdown
             value={hour}
             onChange={onHourChange}
             options={hours}
             placeholder="Hour"
-            width="min-w-[90px]"
+            width="min-w-[100px]"
           />
         </div>
         
@@ -53,7 +53,7 @@ const TimeSelector = ({
             onChange={onMinuteChange}
             options={minutes}
             placeholder="Minute"
-            width="min-w-[90px]"
+            width="min-w-[100px]"
           />
         </div>
         
@@ -63,7 +63,7 @@ const TimeSelector = ({
             onChange={onPeriodChange}
             options={periods}
             placeholder="AM/PM"
-            width="min-w-[90px]"
+            width="min-w-[100px]"
           />
         </div>
       </div>
@@ -79,13 +79,13 @@ interface TimeDropdownProps {
   width?: string;
 }
 
-const TimeDropdown = ({ value, onChange, options, placeholder, width = "min-w-[90px]" }: TimeDropdownProps) => {
+const TimeDropdown = ({ value, onChange, options, placeholder, width = "min-w-[100px]" }: TimeDropdownProps) => {
   return (
     <Select
       value={value}
       onValueChange={onChange}
     >
-      <SelectTrigger className="h-9 px-3">
+      <SelectTrigger className="h-10 px-4 w-full">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent
