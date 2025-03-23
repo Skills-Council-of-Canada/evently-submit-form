@@ -22,5 +22,4 @@ export interface EventRecord {
   imagePermission?: boolean;
   suggestedCaption?: string;
   contentHighlight?: string;
-  messageTone?: string;
 }

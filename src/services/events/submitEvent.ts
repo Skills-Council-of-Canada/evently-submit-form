@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { EventRecord } from "./types";
 import { toast } from "@/hooks/use-toast";
@@ -59,8 +58,7 @@ const prepareEventForSupabase = (eventData: EventRecord) => {
     notable_achievements: eventData.notableAchievements || null,
     image_permission: eventData.imagePermission !== undefined ? eventData.imagePermission : null,
     suggested_caption: eventData.suggestedCaption || null,
-    content_highlight: eventData.contentHighlight || null,
-    message_tone: eventData.messageTone || null
+    content_highlight: eventData.contentHighlight || null
   };
   
   console.log("🔷 Prepared data for Supabase:", JSON.stringify(prepared, null, 2));

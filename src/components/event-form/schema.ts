@@ -38,7 +38,6 @@ export const formSchema = z.object({
   imagePermission: z.boolean().optional(),
   suggestedCaption: z.string().optional(),
   contentHighlight: z.string().optional(),
-  messageTone: z.string().optional(),
 });
 
 export type FormValues = z.infer<typeof formSchema>;
