@@ -33,9 +33,6 @@ export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> 
         <EventLocationField form={form} />
         <AudienceTypeField form={form} />
         <EstimatedAttendanceField form={form} />
-      </div>
-      
-      <div className="mt-6">
         <EventTimeField form={form} />
       </div>
       
