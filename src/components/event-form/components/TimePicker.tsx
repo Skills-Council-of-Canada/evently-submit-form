@@ -33,7 +33,7 @@ const TimePicker = ({ value, onChange, placeholder = "Select time" }: TimePicker
               onChange(e.target.value);
             }}
             placeholder={placeholder}
-            className="w-full pr-10"
+            className="w-full pr-10 bg-white"
             onClick={() => {
               console.log("TimePicker input clicked, opening popover");
               setOpen(true);
@@ -42,7 +42,7 @@ const TimePicker = ({ value, onChange, placeholder = "Select time" }: TimePicker
           <Clock className="absolute right-3 top-2.5 h-4 w-4 text-gray-400 pointer-events-none" />
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-96 p-4" align="start">
+      <PopoverContent className="w-96 p-4 bg-white" align="start">
         <div className="grid grid-cols-2 gap-6">
           <TimeSelector 
             title="Start Time"

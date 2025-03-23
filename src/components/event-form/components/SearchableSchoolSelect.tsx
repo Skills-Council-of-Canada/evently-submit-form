@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { School } from "@/services/schoolService";
@@ -26,15 +25,12 @@ export function SearchableSchoolSelect({
   const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   
-  // Make sure schools is always an array
   const safeSchools = Array.isArray(schools) ? schools : [];
   
-  // Find the selected school object based on the school name value
   const selectedSchool = safeSchools.length > 0 
     ? safeSchools.find(school => school.school_name === value) 
     : null;
   
-  // Filter schools based on search query
   const filteredSchools = safeSchools.length > 0
     ? safeSchools
         .filter(school => 
@@ -48,30 +44,25 @@ export function SearchableSchoolSelect({
         .sort((a, b) => a.school_name.localeCompare(b.school_name))
     : [];
 
-  // When a school is selected, trigger the callback
   useEffect(() => {
     if (onSchoolSelect) {
       onSchoolSelect(selectedSchool || null);
     }
   }, [value, onSchoolSelect, selectedSchool]);
 
-  // Handle input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
     setShowDropdown(true);
   };
 
-  // Handle school selection
   const handleSelectSchool = (schoolName: string) => {
     onChange(schoolName);
     setShowDropdown(false);
     setSearchQuery("");
   };
 
-  // Handle clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      // @ts-ignore - we know the current target is an HTMLElement
       if (e.target && !e.target.closest('.school-select-container')) {
         setShowDropdown(false);
       }
@@ -86,7 +77,6 @@ export function SearchableSchoolSelect({
     };
   }, [showDropdown]);
 
-  // Handle button click to prevent form submission
   const handleButtonClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -107,7 +97,7 @@ export function SearchableSchoolSelect({
             value={searchQuery}
             onChange={handleInputChange}
             onFocus={() => setShowDropdown(true)}
-            className="w-full pr-10"
+            className="w-full pr-10 bg-white"
           />
         </FormControl>
         <Button
@@ -123,7 +113,7 @@ export function SearchableSchoolSelect({
       </div>
 
       {showDropdown && (
-        <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover shadow-md">
+        <div className="absolute z-50 mt-1 w-full rounded-md border bg-white shadow-md">
           <div className="max-h-[300px] overflow-y-auto p-1">
             {filteredSchools.length === 0 ? (
               <div className="py-6 text-center text-sm text-muted-foreground">
@@ -157,7 +147,6 @@ export function SearchableSchoolSelect({
         </div>
       )}
       
-      {/* Show the current selection as text if there is a value */}
       {!searchQuery && value && (
         <div className="mt-1 text-sm text-muted-foreground">
           Selected: {value}
