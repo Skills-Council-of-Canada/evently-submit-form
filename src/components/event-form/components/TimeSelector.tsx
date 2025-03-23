@@ -1,8 +1,7 @@
 
 import React from "react";
 import { Label } from "@/components/ui/label";
-import TimeDropdown from "./TimeDropdown";
-import { useTimeOptions } from "../hooks/useTimeOptions";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface TimeSelectorProps {
   title: string;
@@ -23,41 +22,70 @@ const TimeSelector = ({
   onMinuteChange,
   onPeriodChange
 }: TimeSelectorProps) => {
-  const { hours, minutes, periods } = useTimeOptions();
+  // Hours options: 1-12
+  const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
+  
+  // Minutes options: 00, 15, 30, 45
+  const minutes = ["00", "15", "30", "45"];
+  
+  // Periods: AM, PM
+  const periods = ["AM", "PM"];
 
   return (
     <div className="space-y-2 w-full">
       <Label className="font-medium text-gray-700">{title}</Label>
-      <div className="grid grid-cols-3 gap-2 w-full min-w-[240px] bg-event-light-purple/30 p-4 rounded-md">
-        <div className="w-full">
-          <TimeDropdown
-            value={hour}
-            onChange={onHourChange}
-            options={hours}
-            placeholder="Hour"
-          />
-        </div>
+      <div className="grid grid-cols-3 gap-3 w-full min-w-[240px]">
+        <TimeDropdown
+          value={hour}
+          onChange={onHourChange}
+          options={hours}
+          placeholder="Hour"
+        />
         
-        <div className="w-full">
-          <TimeDropdown
-            value={minute}
-            onChange={onMinuteChange}
-            options={minutes}
-            placeholder="Minute"
-          />
-        </div>
+        <TimeDropdown
+          value={minute}
+          onChange={onMinuteChange}
+          options={minutes}
+          placeholder="Minute"
+        />
         
-        <div className="w-full">
-          <TimeDropdown
-            value={period}
-            onChange={onPeriodChange}
-            options={periods}
-            placeholder="AM/PM"
-          />
-        </div>
+        <TimeDropdown
+          value={period}
+          onChange={onPeriodChange}
+          options={periods}
+          placeholder="AM/PM"
+        />
       </div>
     </div>
   );
 };
 
+interface TimeDropdownProps {
+  value: string;
+  onChange: (value: string) => void;
+  options: string[];
+  placeholder: string;
+}
+
+const TimeDropdown = ({ value, onChange, options, placeholder }: TimeDropdownProps) => {
+  return (
+    <Select
+      value={value}
+      onValueChange={onChange}
+    >
+      <SelectTrigger className="w-full">
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent className="min-w-[100px]">
+        {options.map((option) => (
+          <SelectItem key={`${placeholder}-${option}`} value={option}>
+            {option}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+};
+
 export default TimeSelector;
+
