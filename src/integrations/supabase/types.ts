@@ -23,6 +23,7 @@ export type Database = {
           image_url: string | null
           school_name: string
           status: string
+          submission_date: string
         }
         Insert: {
           audience_type: string
@@ -37,6 +38,7 @@ export type Database = {
           image_url?: string | null
           school_name: string
           status?: string
+          submission_date: string
         }
         Update: {
           audience_type?: string
@@ -51,6 +53,7 @@ export type Database = {
           image_url?: string | null
           school_name?: string
           status?: string
+          submission_date?: string
         }
         Relationships: []
       }

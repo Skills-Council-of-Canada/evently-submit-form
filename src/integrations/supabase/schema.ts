@@ -18,6 +18,7 @@ export type ExtendedDatabase = Database & {
           audience_type: string;
           status: 'pending' | 'approved' | 'published';
           created_at: string;
+          submission_date: string;
         };
         Insert: {
           id?: string;
@@ -31,6 +32,7 @@ export type ExtendedDatabase = Database & {
           audience_type: string;
           status?: 'pending' | 'approved' | 'published';
           created_at?: string;
+          submission_date: string;
         };
         Update: {
           id?: string;
@@ -44,6 +46,7 @@ export type ExtendedDatabase = Database & {
           audience_type?: string;
           status?: 'pending' | 'approved' | 'published';
           created_at?: string;
+          submission_date?: string;
         };
         Relationships: [];
       };
