@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { School } from "@/services/schoolService";
@@ -63,7 +64,8 @@ export function SearchableSchoolSelect({
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (e.target && !e.target.closest('.school-select-container')) {
+      const target = e.target as Node;
+      if (target && !document.querySelector('.school-select-container')?.contains(target)) {
         setShowDropdown(false);
       }
     };

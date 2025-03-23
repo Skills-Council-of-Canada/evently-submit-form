@@ -82,7 +82,7 @@ export function EventsFilter({
             placeholder="Search events..."
             value={searchQuery}
             onChange={(e) => onSearch(e.target.value)}
-            className="pl-8"
+            className="pl-8 bg-white"
           />
           {searchQuery && (
             <Button
@@ -101,10 +101,10 @@ export function EventsFilter({
           value={selectedSchool || "all"}
           onValueChange={(value) => onSchoolFilter(value === "all" ? null : value)}
         >
-          <SelectTrigger className="w-full md:w-[200px]">
+          <SelectTrigger className="w-full md:w-[200px] bg-white">
             <SelectValue placeholder="School" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             <SelectItem value="all">All Schools</SelectItem>
             {isLoadingSchools ? (
               <SelectItem value="loading" disabled>Loading schools...</SelectItem>
@@ -124,10 +124,10 @@ export function EventsFilter({
           value={selectedStatus || "all"}
           onValueChange={(value) => onStatusFilter(value === "all" ? null : value)}
         >
-          <SelectTrigger className="w-full md:w-[180px]">
+          <SelectTrigger className="w-full md:w-[180px] bg-white">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             <SelectItem value="all">All Statuses</SelectItem>
             {statuses.map((status) => (
               <SelectItem key={status.value} value={status.value}>
@@ -141,7 +141,7 @@ export function EventsFilter({
           <PopoverTrigger asChild>
             <Button
               variant="outline"
-              className="w-full md:w-[240px] justify-start text-left font-normal"
+              className="w-full md:w-[240px] justify-start text-left font-normal bg-white"
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {dateRange.from ? (
@@ -158,7 +158,7 @@ export function EventsFilter({
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
+          <PopoverContent className="w-auto p-0 bg-white" align="start">
             <Calendar
               initialFocus
               mode="range"

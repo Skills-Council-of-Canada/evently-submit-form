@@ -81,7 +81,7 @@ const TimeDropdown = ({ value, onChange, options, placeholder }: TimeDropdownPro
       value={value}
       onValueChange={onChange}
     >
-      <SelectTrigger className="h-10 px-3 w-full">
+      <SelectTrigger className="h-10 px-3 w-full bg-white">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent

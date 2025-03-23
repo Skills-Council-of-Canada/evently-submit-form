@@ -24,11 +24,11 @@ export const AudienceTypeField = ({ form }: AudienceTypeFieldProps) => {
             defaultValue={field.value}
           >
             <FormControl>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white">
                 <SelectValue placeholder="Select audience type" />
               </SelectTrigger>
             </FormControl>
-            <SelectContent>
+            <SelectContent className="bg-white">
               <SelectItem value="students">Students</SelectItem>
               <SelectItem value="parents">Parents</SelectItem>
               <SelectItem value="faculty">Faculty</SelectItem>
@@ -44,4 +44,4 @@ export const AudienceTypeField = ({ form }: AudienceTypeFieldProps) => {
       )}
     />
   );
-};
+}

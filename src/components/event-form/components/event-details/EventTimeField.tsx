@@ -1,4 +1,3 @@
-
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { FormValues } from "../../schema";
@@ -74,14 +73,14 @@ export const EventTimeField = ({ form }: EventTimeFieldProps) => {
     <FormItem>
       <FormLabel>Event Time *</FormLabel>
       <FormControl>
-        <div className="flex flex-wrap items-center gap-2 p-3 rounded-md border border-input bg-background">
+        <div className="flex flex-wrap items-center gap-2 p-3 rounded-md border border-input bg-white">
           <div className="flex items-center">
             <Clock className="h-4 w-4 text-gray-500 mr-2" />
             <span className="text-xs font-medium text-gray-700 mr-2">From</span>
             
             <div className="flex gap-1">
               <Select value={parsedTime.startHour} onValueChange={(value) => updateTimeValue({ startHour: value })}>
-                <SelectTrigger className="w-16 h-8">
+                <SelectTrigger className="w-16 h-8 bg-white">
                   <SelectValue placeholder="Hour" />
                 </SelectTrigger>
                 <SelectContent className="bg-white min-w-[5rem]">
@@ -94,7 +93,7 @@ export const EventTimeField = ({ form }: EventTimeFieldProps) => {
               </Select>
               
               <Select value={parsedTime.startMinute} onValueChange={(value) => updateTimeValue({ startMinute: value })}>
-                <SelectTrigger className="w-16 h-8">
+                <SelectTrigger className="w-16 h-8 bg-white">
                   <SelectValue placeholder="Min" />
                 </SelectTrigger>
                 <SelectContent className="bg-white min-w-[5rem]">
@@ -107,7 +106,7 @@ export const EventTimeField = ({ form }: EventTimeFieldProps) => {
               </Select>
               
               <Select value={parsedTime.startPeriod} onValueChange={(value) => updateTimeValue({ startPeriod: value as "AM" | "PM" })}>
-                <SelectTrigger className="w-16 h-8">
+                <SelectTrigger className="w-16 h-8 bg-white">
                   <SelectValue placeholder="AM/PM" />
                 </SelectTrigger>
                 <SelectContent className="bg-white min-w-[5rem]">
@@ -128,7 +127,7 @@ export const EventTimeField = ({ form }: EventTimeFieldProps) => {
             
             <div className="flex gap-1">
               <Select value={parsedTime.endHour} onValueChange={(value) => updateTimeValue({ endHour: value })}>
-                <SelectTrigger className="w-16 h-8">
+                <SelectTrigger className="w-16 h-8 bg-white">
                   <SelectValue placeholder="Hour" />
                 </SelectTrigger>
                 <SelectContent className="bg-white min-w-[5rem]">
@@ -141,7 +140,7 @@ export const EventTimeField = ({ form }: EventTimeFieldProps) => {
               </Select>
               
               <Select value={parsedTime.endMinute} onValueChange={(value) => updateTimeValue({ endMinute: value })}>
-                <SelectTrigger className="w-16 h-8">
+                <SelectTrigger className="w-16 h-8 bg-white">
                   <SelectValue placeholder="Min" />
                 </SelectTrigger>
                 <SelectContent className="bg-white min-w-[5rem]">
@@ -154,7 +153,7 @@ export const EventTimeField = ({ form }: EventTimeFieldProps) => {
               </Select>
               
               <Select value={parsedTime.endPeriod} onValueChange={(value) => updateTimeValue({ endPeriod: value as "AM" | "PM" })}>
-                <SelectTrigger className="w-16 h-8">
+                <SelectTrigger className="w-16 h-8 bg-white">
                   <SelectValue placeholder="AM/PM" />
                 </SelectTrigger>
                 <SelectContent className="bg-white min-w-[5rem]">
