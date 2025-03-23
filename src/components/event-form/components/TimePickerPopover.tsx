@@ -13,8 +13,8 @@ interface TimePickerPopoverProps {
 
 const TimePickerPopover = ({ timeValue, updateTime }: TimePickerPopoverProps) => {
   return (
-    <PopoverContent className="w-[480px] p-4" align="start">
-      <div className="grid grid-cols-2 gap-6">
+    <PopoverContent className="w-[500px] p-6" align="start">
+      <div className="grid grid-cols-2 gap-8">
         <TimeSelector 
           title="Start Time"
           hour={timeValue.startHour}
