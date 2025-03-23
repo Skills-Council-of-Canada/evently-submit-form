@@ -64,23 +64,37 @@ const EventForm = () => {
           <form onSubmit={handleSubmit} className="space-y-8">
             <FormHeader submissionError={submissionError} />
 
-            <EventDetailsSection form={form} />
+            <div className="section-bg">
+              <EventDetailsSection form={form} />
+            </div>
             
-            <ParticipationHighlightsSection form={form} />
+            <div className="section-bg">
+              <ParticipationHighlightsSection form={form} />
+            </div>
             
-            <EventImageSection 
-              form={form} 
-              handleImageChange={handleImageChange} 
-              previewImage={previewImage} 
-            />
+            <div className="section-bg">
+              <EventImageSection 
+                form={form} 
+                handleImageChange={handleImageChange} 
+                previewImage={previewImage} 
+              />
+            </div>
             
-            <MediaMessagingSection form={form} />
+            <div className="section-bg">
+              <MediaMessagingSection form={form} />
+            </div>
             
-            <TonePreferencesSection form={form} />
+            <div className="section-bg">
+              <TonePreferencesSection form={form} />
+            </div>
             
-            <SubmissionDateSection form={form} />
+            <div className="section-bg">
+              <SubmissionDateSection form={form} />
+            </div>
             
-            <ContactInfoSection form={form} />
+            <div className="section-bg">
+              <ContactInfoSection form={form} />
+            </div>
             
             <SubmitButton isSubmitting={isSubmitting} />
           </form>

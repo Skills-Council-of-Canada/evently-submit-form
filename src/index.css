@@ -110,4 +110,8 @@
   .form-subtitle {
     @apply text-lg font-medium mb-4 pb-2 border-b text-gray-700;
   }
+
+  .section-bg {
+    @apply bg-event-light-purple/10 rounded-lg border border-event-light-purple/20 p-6 shadow-sm;
+  }
 }
