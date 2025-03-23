@@ -32,7 +32,7 @@ export const EventDateField = ({ form }: EventDateFieldProps) => {
                 <Button
                   variant={"outline"}
                   className={cn(
-                    "pl-3 text-left font-normal",
+                    "pl-3 text-left font-normal bg-white",
                     !field.value && "text-muted-foreground"
                   )}
                 >
@@ -45,7 +45,7 @@ export const EventDateField = ({ form }: EventDateFieldProps) => {
                 </Button>
               </FormControl>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
+            <PopoverContent className="w-auto p-0 bg-white" align="start">
               <Calendar
                 mode="single"
                 selected={field.value ? new Date(field.value) : undefined}
