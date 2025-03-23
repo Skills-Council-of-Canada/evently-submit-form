@@ -9,5 +9,9 @@ interface EventTimeFieldProps {
 }
 
 export const EventTimeField = ({ form }: EventTimeFieldProps) => {
-  return <InlineTimeField form={form} />;
+  return (
+    <div className="w-full">
+      <InlineTimeField form={form} />
+    </div>
+  );
 };

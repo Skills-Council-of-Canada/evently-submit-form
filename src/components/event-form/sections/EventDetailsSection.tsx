@@ -30,10 +30,13 @@ export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <EventNameField form={form} />
         <EventDateField form={form} />
-        <EventTimeField form={form} />
         <EventLocationField form={form} />
         <AudienceTypeField form={form} />
         <EstimatedAttendanceField form={form} />
+      </div>
+      
+      <div className="mt-6">
+        <EventTimeField form={form} />
       </div>
       
       <div className="mt-6">
