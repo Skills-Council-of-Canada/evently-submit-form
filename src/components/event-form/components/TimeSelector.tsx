@@ -11,6 +11,7 @@ interface TimeSelectorProps {
   onHourChange: (hour: string) => void;
   onMinuteChange: (minute: string) => void;
   onPeriodChange: (period: string) => void;
+  showLabel?: boolean;
 }
 
 const TimeSelector = ({
@@ -20,7 +21,8 @@ const TimeSelector = ({
   period,
   onHourChange,
   onMinuteChange,
-  onPeriodChange
+  onPeriodChange,
+  showLabel = true
 }: TimeSelectorProps) => {
   // Hours options: 1-12
   const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
@@ -33,28 +35,34 @@ const TimeSelector = ({
 
   return (
     <div className="space-y-2">
-      <Label className="font-medium text-gray-700">{title}</Label>
-      <div className="grid grid-cols-3 gap-2">
-        <TimeDropdown
-          value={hour}
-          onChange={onHourChange}
-          options={hours}
-          placeholder="Hour"
-        />
+      {showLabel && <Label className="font-medium text-gray-700">{title}</Label>}
+      <div className="grid grid-cols-3 gap-1">
+        <div className="flex-1">
+          <TimeDropdown
+            value={hour}
+            onChange={onHourChange}
+            options={hours}
+            placeholder="Hour"
+          />
+        </div>
         
-        <TimeDropdown
-          value={minute}
-          onChange={onMinuteChange}
-          options={minutes}
-          placeholder="Minute"
-        />
+        <div className="flex-1">
+          <TimeDropdown
+            value={minute}
+            onChange={onMinuteChange}
+            options={minutes}
+            placeholder="Minute"
+          />
+        </div>
         
-        <TimeDropdown
-          value={period}
-          onChange={onPeriodChange}
-          options={periods}
-          placeholder="AM/PM"
-        />
+        <div className="flex-1">
+          <TimeDropdown
+            value={period}
+            onChange={onPeriodChange}
+            options={periods}
+            placeholder="AM/PM"
+          />
+        </div>
       </div>
     </div>
   );
@@ -73,10 +81,15 @@ const TimeDropdown = ({ value, onChange, options, placeholder }: TimeDropdownPro
       value={value}
       onValueChange={onChange}
     >
-      <SelectTrigger>
+      <SelectTrigger className="h-9">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent
+        className="w-full z-50 bg-white"
+        position="popper"
+        side="top"
+        sideOffset={4}
+      >
         {options.map((option) => (
           <SelectItem key={`${placeholder}-${option}`} value={option}>
             {option}

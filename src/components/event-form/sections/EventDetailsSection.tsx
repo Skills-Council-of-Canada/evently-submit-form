@@ -12,7 +12,7 @@ import { CalendarIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
 import { FormValues } from "../schema";
-import TimePicker from "../components/TimePicker";
+import InlineTimeField from "../components/InlineTimeField";
 
 export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> }) => {
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -106,26 +106,8 @@ export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> 
         <FormField
           control={form.control}
           name="eventTime"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel aria-required="true">
-                Event Time *
-              </FormLabel>
-              <FormControl>
-                <TimePicker
-                  value={field.value}
-                  onChange={(value) => {
-                    console.log("TimePicker onChange called with:", value);
-                    field.onChange(value);
-                  }}
-                  placeholder="Select start and end times"
-                />
-              </FormControl>
-              <FormDescription>
-                The start and end time of your event
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
+          render={() => (
+            <InlineTimeField form={form} />
           )}
         />
         
