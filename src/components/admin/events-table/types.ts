@@ -5,6 +5,14 @@ export interface ExtendedEventRecord extends Omit<EventRecord, 'id'> {
   id: string; // Make id required
   status: "pending" | "approved" | "published";
   contentGenerated?: boolean;
+  participants?: string;
+  keyHighlights?: string;
+  specialGuests?: string;
+  notableAchievements?: string;
+  imagePermission?: boolean;
+  suggestedCaption?: string;
+  contentHighlight?: string;
+  messageTone?: string;
 }
 
 export interface EventsTableProps {

@@ -28,12 +28,12 @@ export const getAllEvents = async (): Promise<EventRecord[]> => {
       return [];
     }
 
-    // Map Supabase records to EventRecord format
+    // Map Supabase records to EventRecord format with all fields
     const formattedEvents = data.map((record: any) => ({
       id: record.id,
       eventName: record.event_name,
       eventDate: new Date(record.event_date),
-      eventTime: record.event_time,
+      eventTime: record.event_time || "",
       description: record.description,
       schoolName: record.school_name,
       contactName: record.contact_name,
@@ -41,7 +41,17 @@ export const getAllEvents = async (): Promise<EventRecord[]> => {
       audienceType: record.audience_type,
       imageUrl: record.image_url || null,
       status: record.status || "pending",
-      createdAt: record.created_at
+      createdAt: record.created_at,
+      eventLocation: record.event_location || null,
+      estimatedAttendance: record.estimated_attendance || null,
+      participants: record.participants || null,
+      keyHighlights: record.key_highlights || null,
+      specialGuests: record.special_guests || null,
+      notableAchievements: record.notable_achievements || null,
+      imagePermission: record.image_permission || false,
+      suggestedCaption: record.suggested_caption || null,
+      contentHighlight: record.content_highlight || null,
+      messageTone: record.message_tone || null
     }));
 
     console.log("Formatted events:", formattedEvents);

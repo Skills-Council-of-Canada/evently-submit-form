@@ -37,7 +37,16 @@ export const useEvents = ({
             ...event,
             id: event.id as string, // We know id exists because of the filter
             status: event.status || "pending" as const,
-            contentGenerated: Math.random() > 0.5 // Randomly set for demo purposes
+            contentGenerated: Math.random() > 0.5, // Randomly set for demo purposes
+            // Ensure all optional fields are properly mapped
+            participants: event.participants,
+            keyHighlights: event.keyHighlights,
+            specialGuests: event.specialGuests,
+            notableAchievements: event.notableAchievements,
+            imagePermission: event.imagePermission,
+            suggestedCaption: event.suggestedCaption,
+            contentHighlight: event.contentHighlight,
+            messageTone: event.messageTone
           }));
         setEvents(extendedEvents);
       } catch (error) {
