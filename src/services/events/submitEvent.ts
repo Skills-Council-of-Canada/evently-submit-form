@@ -49,7 +49,18 @@ const prepareEventForSupabase = (eventData: EventRecord) => {
     submission_date: eventData.submissionDate ? formatEventDate(eventData.submissionDate) : formatEventDate(new Date()),
     image_url: eventData.imageUrl || null,
     status: "pending" as const,
-    created_at: new Date().toISOString()
+    created_at: new Date().toISOString(),
+    // New fields
+    event_location: eventData.eventLocation || null,
+    estimated_attendance: eventData.estimatedAttendance || null,
+    participants: eventData.participants || null,
+    key_highlights: eventData.keyHighlights || null,
+    special_guests: eventData.specialGuests || null,
+    notable_achievements: eventData.notableAchievements || null,
+    image_permission: eventData.imagePermission !== undefined ? eventData.imagePermission : null,
+    suggested_caption: eventData.suggestedCaption || null,
+    content_highlight: eventData.contentHighlight || null,
+    message_tone: eventData.messageTone || null
   };
   
   console.log("🔷 Prepared data for Supabase:", JSON.stringify(prepared, null, 2));

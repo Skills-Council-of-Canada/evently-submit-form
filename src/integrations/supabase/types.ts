@@ -14,46 +14,76 @@ export type Database = {
           audience_type: string
           contact_email: string
           contact_name: string
+          content_highlight: string | null
           created_at: string
           description: string
+          estimated_attendance: string | null
           event_date: string
+          event_location: string | null
           event_name: string
           event_time: string
           id: string
+          image_permission: boolean | null
           image_url: string | null
+          key_highlights: string | null
+          message_tone: string | null
+          notable_achievements: string | null
+          participants: string | null
           school_name: string
+          special_guests: string | null
           status: string
           submission_date: string
+          suggested_caption: string | null
         }
         Insert: {
           audience_type: string
           contact_email: string
           contact_name: string
+          content_highlight?: string | null
           created_at?: string
           description: string
+          estimated_attendance?: string | null
           event_date: string
+          event_location?: string | null
           event_name: string
           event_time: string
           id?: string
+          image_permission?: boolean | null
           image_url?: string | null
+          key_highlights?: string | null
+          message_tone?: string | null
+          notable_achievements?: string | null
+          participants?: string | null
           school_name: string
+          special_guests?: string | null
           status?: string
           submission_date: string
+          suggested_caption?: string | null
         }
         Update: {
           audience_type?: string
           contact_email?: string
           contact_name?: string
+          content_highlight?: string | null
           created_at?: string
           description?: string
+          estimated_attendance?: string | null
           event_date?: string
+          event_location?: string | null
           event_name?: string
           event_time?: string
           id?: string
+          image_permission?: boolean | null
           image_url?: string | null
+          key_highlights?: string | null
+          message_tone?: string | null
+          notable_achievements?: string | null
+          participants?: string | null
           school_name?: string
+          special_guests?: string | null
           status?: string
           submission_date?: string
+          suggested_caption?: string | null
         }
         Relationships: []
       }

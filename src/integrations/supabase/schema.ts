@@ -19,6 +19,16 @@ export type ExtendedDatabase = Database & {
           status: 'pending' | 'approved' | 'published';
           created_at: string;
           submission_date: string;
+          event_location: string | null;
+          estimated_attendance: string | null;
+          participants: string | null;
+          key_highlights: string | null;
+          special_guests: string | null;
+          notable_achievements: string | null;
+          image_permission: boolean | null;
+          suggested_caption: string | null;
+          content_highlight: string | null;
+          message_tone: string | null;
         };
         Insert: {
           id?: string;
@@ -33,6 +43,16 @@ export type ExtendedDatabase = Database & {
           status?: 'pending' | 'approved' | 'published';
           created_at?: string;
           submission_date: string;
+          event_location?: string | null;
+          estimated_attendance?: string | null;
+          participants?: string | null;
+          key_highlights?: string | null;
+          special_guests?: string | null;
+          notable_achievements?: string | null;
+          image_permission?: boolean | null;
+          suggested_caption?: string | null;
+          content_highlight?: string | null;
+          message_tone?: string | null;
         };
         Update: {
           id?: string;
@@ -47,6 +67,16 @@ export type ExtendedDatabase = Database & {
           status?: 'pending' | 'approved' | 'published';
           created_at?: string;
           submission_date?: string;
+          event_location?: string | null;
+          estimated_attendance?: string | null;
+          participants?: string | null;
+          key_highlights?: string | null;
+          special_guests?: string | null;
+          notable_achievements?: string | null;
+          image_permission?: boolean | null;
+          suggested_caption?: string | null;
+          content_highlight?: string | null;
+          message_tone?: string | null;
         };
         Relationships: [];
       };

@@ -12,6 +12,8 @@ export const formSchema = z.object({
   eventTime: z.string().min(1, {
     message: "Event time is required.",
   }),
+  eventLocation: z.string().optional(),
+  estimatedAttendance: z.string().optional(),
   description: z.string().min(10, {
     message: "Description must be at least 10 characters.",
   }).max(500, {
@@ -31,6 +33,14 @@ export const formSchema = z.object({
   }),
   submissionDate: z.date(),
   eventImage: z.instanceof(FileList).optional(),
+  participants: z.string().optional(),
+  keyHighlights: z.string().optional(),
+  specialGuests: z.string().optional(),
+  notableAchievements: z.string().optional(),
+  imagePermission: z.boolean().optional(),
+  suggestedCaption: z.string().optional(),
+  contentHighlight: z.string().optional(),
+  messageTone: z.string().optional(),
 });
 
 export type FormValues = z.infer<typeof formSchema>;

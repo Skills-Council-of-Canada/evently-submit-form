@@ -131,6 +131,25 @@ export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> 
         
         <FormField
           control={form.control}
+          name="eventLocation"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Event Location (Room or Area)
+              </FormLabel>
+              <FormControl>
+                <Input placeholder="Gymnasium, Library, Outdoor Field" {...field} value={field.value || ""} />
+              </FormControl>
+              <FormDescription>
+                Where the event will take place
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
           name="audienceType"
           render={({ field }) => (
             <FormItem>
@@ -156,6 +175,25 @@ export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> 
               </Select>
               <FormDescription>
                 Who is the event intended for
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="estimatedAttendance"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Estimated Attendance
+              </FormLabel>
+              <FormControl>
+                <Input placeholder="e.g., 100 students, 30 parents" {...field} value={field.value || ""} />
+              </FormControl>
+              <FormDescription>
+                Approximate number of attendees
               </FormDescription>
               <FormMessage />
             </FormItem>

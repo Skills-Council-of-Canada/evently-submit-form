@@ -5,7 +5,10 @@ import {
   EventDetailsSection, 
   ContactInfoSection, 
   EventImageSection,
-  SubmissionDateSection
+  SubmissionDateSection,
+  ParticipationHighlightsSection,
+  MediaMessagingSection,
+  TonePreferencesSection
 } from "./sections";
 import SuccessMessage from "./SuccessMessage";
 import FormHeader from "./FormHeader";
@@ -63,15 +66,21 @@ const EventForm = () => {
 
             <EventDetailsSection form={form} />
             
-            <SubmissionDateSection form={form} />
-            
-            <ContactInfoSection form={form} />
+            <ParticipationHighlightsSection form={form} />
             
             <EventImageSection 
               form={form} 
               handleImageChange={handleImageChange} 
               previewImage={previewImage} 
             />
+            
+            <MediaMessagingSection form={form} />
+            
+            <TonePreferencesSection form={form} />
+            
+            <SubmissionDateSection form={form} />
+            
+            <ContactInfoSection form={form} />
             
             <SubmitButton isSubmitting={isSubmitting} />
           </form>

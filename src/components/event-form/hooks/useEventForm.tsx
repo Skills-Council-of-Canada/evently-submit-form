@@ -18,6 +18,16 @@ export function useEventForm() {
       contactName: "",
       contactEmail: "",
       eventTime: "8:00 AM - 9:00 AM", // Default time value
+      eventLocation: "",
+      estimatedAttendance: "",
+      participants: "",
+      keyHighlights: "",
+      specialGuests: "",
+      notableAchievements: "",
+      imagePermission: false,
+      suggestedCaption: "",
+      contentHighlight: "",
+      messageTone: "",
     },
   });
 

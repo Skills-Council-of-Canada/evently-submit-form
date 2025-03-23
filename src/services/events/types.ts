@@ -13,4 +13,14 @@ export interface EventRecord {
   imageUrl?: string | null;
   status?: 'pending' | 'approved' | 'published';
   createdAt?: string;
+  eventLocation?: string;
+  estimatedAttendance?: string;
+  participants?: string;
+  keyHighlights?: string;
+  specialGuests?: string;
+  notableAchievements?: string;
+  imagePermission?: boolean;
+  suggestedCaption?: string;
+  contentHighlight?: string;
+  messageTone?: string;
 }
