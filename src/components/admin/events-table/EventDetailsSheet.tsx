@@ -190,20 +190,6 @@ export function EventDetailsSheet({
             </>
           )}
           
-          {/* Tone Preferences */}
-          {event.messageTone && (
-            <>
-              <Separator />
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-2">Tone Preferences</h3>
-                <div>
-                  <p className="font-medium">Message Tone</p>
-                  <p className="text-sm text-muted-foreground">{event.messageTone}</p>
-                </div>
-              </div>
-            </>
-          )}
-          
           {/* Event Image */}
           {event.imageUrl && (
             <>
