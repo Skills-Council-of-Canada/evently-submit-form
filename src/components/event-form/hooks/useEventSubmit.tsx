@@ -38,18 +38,27 @@ export function useEventSubmit() {
       const eventDate = data.eventDate instanceof Date ? data.eventDate : new Date(data.eventDate);
       console.log("📝 Formatted event date:", eventDate.toISOString());
       
-      // Ensure eventTime is properly formatted
+      // Ensure eventTime is properly formatted or provide a default value
       console.log("📝 Event time from form:", data.eventTime);
-      if (!data.eventTime || typeof data.eventTime !== 'string') {
-        console.error("📝 Event time is invalid:", data.eventTime);
-        throw new Error("Invalid event time format");
-      }
       
-      // Validate time format
-      const timePattern = /(\d{1,2}):(\d{2}) (AM|PM) - (\d{1,2}):(\d{2}) (AM|PM)/;
-      if (!timePattern.test(data.eventTime)) {
-        console.error("📝 Event time format doesn't match expected pattern:", data.eventTime);
-        console.log("📝 Expected format: 'HH:MM AM/PM - HH:MM AM/PM'");
+      // Set a default time if none is provided
+      let eventTime = "12:00 PM - 1:00 PM";
+      
+      if (data.eventTime && typeof data.eventTime === 'string' && data.eventTime.trim() !== '') {
+        // Validate time format
+        const timePattern = /(\d{1,2}):(\d{2}) (AM|PM) - (\d{1,2}):(\d{2}) (AM|PM)/;
+        if (timePattern.test(data.eventTime)) {
+          eventTime = data.eventTime;
+          console.log("📝 Using provided event time:", eventTime);
+        } else {
+          console.log("📝 Event time format invalid, using default instead:", eventTime);
+          toast({
+            title: "Time Format Notice",
+            description: "The provided event time format was invalid. Using a default time of 12:00 PM - 1:00 PM.",
+          });
+        }
+      } else {
+        console.log("📝 No event time provided, using default:", eventTime);
       }
       
       console.log("📝 Bypassing duplicate check for testing");
@@ -58,7 +67,7 @@ export function useEventSubmit() {
       const eventData: EventRecord = {
         eventName: data.eventName,
         eventDate: eventDate,
-        eventTime: data.eventTime,
+        eventTime: eventTime,
         description: data.description,
         schoolName: data.schoolName,
         contactName: data.contactName,
