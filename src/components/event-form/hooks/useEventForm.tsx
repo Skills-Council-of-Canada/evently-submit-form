@@ -5,12 +5,15 @@ import { formSchema, FormValues } from "../schema";
 import { useImageUpload } from "./useImageUpload";
 import { useFormSubmission } from "./useFormSubmission";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export function useEventForm() {
   const { toast } = useToast();
   // Track if submission is in progress to prevent duplicate submissions
   const [isSubmitting, setLocalSubmitting] = useState(false);
+  
+  // Add a ref to track submission state to prevent race conditions
+  const submissionInProgressRef = useRef(false);
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -48,14 +51,16 @@ export function useEventForm() {
   } = useFormSubmission();
 
   const onSubmit = async (data: FormValues) => {
-    // Double protection against duplicate submissions
-    if (isSubmitting || apiSubmitting) {
-      console.log("⛔ Submission already in progress, preventing duplicate");
+    // Triple protection against duplicate submissions using both state and ref
+    if (isSubmitting || apiSubmitting || submissionInProgressRef.current) {
+      console.log("⛔ Submission already in progress, preventing duplicate submission");
       return;
     }
     
-    // Local submission state for UI feedback
+    // Set both state and ref
     setLocalSubmitting(true);
+    submissionInProgressRef.current = true;
+    
     console.log("✅ Starting form submission with data:", JSON.stringify(data, null, 2));
     
     try {
@@ -69,6 +74,7 @@ export function useEventForm() {
           variant: "destructive",
         });
         setLocalSubmitting(false);
+        submissionInProgressRef.current = false;
         return;
       }
       
@@ -96,6 +102,7 @@ export function useEventForm() {
       });
     } finally {
       setLocalSubmitting(false);
+      submissionInProgressRef.current = false;
     }
   };
 
@@ -106,7 +113,7 @@ export function useEventForm() {
   };
 
   // Combine local and API submission states
-  const combinedIsSubmitting = isSubmitting || apiSubmitting;
+  const combinedIsSubmitting = isSubmitting || apiSubmitting || submissionInProgressRef.current;
 
   return {
     form,

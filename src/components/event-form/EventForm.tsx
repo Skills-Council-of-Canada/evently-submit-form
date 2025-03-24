@@ -14,7 +14,6 @@ import SuccessMessage from "./SuccessMessage";
 import FormHeader from "./FormHeader";
 import SubmitButton from "./SubmitButton";
 import { useEventForm } from "./hooks/useEventForm";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
 
 const EventForm = () => {
@@ -29,22 +28,22 @@ const EventForm = () => {
     handleReset
   } = useEventForm();
 
-  // Complete prevention of form submission behavior
-  const handleSubmit = (e: React.FormEvent) => {
-    // These two lines are critical to prevent page refresh
+  // Custom submission handler that doesn't rely on form events
+  const handleCustomSubmit = (e: React.MouseEvent) => {
+    // Completely prevent any default behavior
     e.preventDefault();
     e.stopPropagation();
     
-    console.log("🚨 Form submission handler triggered - default behavior prevented");
+    console.log("🔴 Custom submit handler triggered - completely bypassing form submission");
     
     // Get form values
     const values = form.getValues();
     const isValid = form.formState.isValid;
     
-    console.log("🚨 Form validation status:", isValid);
+    console.log("🔴 Form validation status:", isValid);
     
     if (!isValid) {
-      console.log("🚨 Form validation failed with errors:", form.formState.errors);
+      console.log("🔴 Form validation failed with errors:", form.formState.errors);
       toast({
         title: "Form Validation Error",
         description: "Please check all required fields are filled correctly.",
@@ -53,69 +52,71 @@ const EventForm = () => {
       return;
     }
     
-    console.log("🚨 Form is valid, proceeding with submission");
-    console.log("🚨 Form values:", JSON.stringify(values, null, 2));
+    console.log("🔴 Form is valid, proceeding with submission");
+    console.log("🔴 Form values:", JSON.stringify(values, null, 2));
     
-    // Call onSubmit directly with the values
+    // Directly call onSubmit with the values
     onSubmit(values);
   };
 
-  // Prevent any possible keydown-related submissions
-  const preventEnterKeySubmission = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
-      console.log("🚨 Enter key pressed in input field - preventing default");
+  const preventKeydownSubmission = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      console.log("🔴 Enter key pressed - preventing default behavior");
       e.preventDefault();
+      e.stopPropagation();
     }
   };
 
   return (
-    <div className="form-container">
+    <div className="form-container" onKeyDown={preventKeydownSubmission}>
       {isSuccess ? (
         <SuccessMessage onReset={handleReset} />
       ) : (
-        <Form {...form}>
-          {/* Use div instead of form to completely avoid native form behavior */}
-          <div className="space-y-8" onKeyDown={preventEnterKeySubmission}>
-            <FormHeader submissionError={submissionError} />
+        // Using Form from shadcn-ui but ensuring it doesn't behave like an HTML form
+        <div className="no-form-wrapper">
+          <Form {...form}>
+            <div className="space-y-8">
+              <FormHeader submissionError={submissionError} />
 
-            <div className="section-bg">
-              <EventDetailsSection form={form} />
+              <div className="section-bg">
+                <EventDetailsSection form={form} />
+              </div>
+              
+              <div className="section-bg">
+                <ParticipationHighlightsSection form={form} />
+              </div>
+              
+              <div className="section-bg">
+                <EventImageSection 
+                  form={form} 
+                  handleImageChange={handleImageChange} 
+                  previewImage={previewImage} 
+                />
+              </div>
+              
+              <div className="section-bg">
+                <MediaMessagingSection form={form} />
+              </div>
+              
+              <div className="section-bg">
+                <TonePreferencesSection form={form} />
+              </div>
+              
+              <div className="section-bg">
+                <SubmissionDateSection form={form} />
+              </div>
+              
+              <div className="section-bg">
+                <ContactInfoSection form={form} />
+              </div>
+              
+              {/* Use a regular div with onClick instead of button */}
+              <div onClick={handleCustomSubmit} className="submit-button-container">
+                <SubmitButton isSubmitting={isSubmitting} />
+              </div>
             </div>
-            
-            <div className="section-bg">
-              <ParticipationHighlightsSection form={form} />
-            </div>
-            
-            <div className="section-bg">
-              <EventImageSection 
-                form={form} 
-                handleImageChange={handleImageChange} 
-                previewImage={previewImage} 
-              />
-            </div>
-            
-            <div className="section-bg">
-              <MediaMessagingSection form={form} />
-            </div>
-            
-            <div className="section-bg">
-              <TonePreferencesSection form={form} />
-            </div>
-            
-            <div className="section-bg">
-              <SubmissionDateSection form={form} />
-            </div>
-            
-            <div className="section-bg">
-              <ContactInfoSection form={form} />
-            </div>
-            
-            {/* Use a button with onClick instead of submit type */}
-            <div onClick={handleSubmit}>
-              <SubmitButton isSubmitting={isSubmitting} />
-            </div>
-          </div>
-        </Form>
+          </Form>
+        </div>
       )}
     </div>
   );

@@ -11,9 +11,9 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({ isSubmitting }) => {
   return (
     <div className="pt-4 border-t flex justify-end">
       <Button 
-        type="submit" 
         className="bg-event-purple hover:bg-event-dark-purple w-full md:w-auto"
         disabled={isSubmitting}
+        type="button" // Explicitly set to button not submit
       >
         {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         {isSubmitting ? "Submitting..." : "Submit Event"}
