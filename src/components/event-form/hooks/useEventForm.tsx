@@ -45,7 +45,10 @@ export function useEventForm() {
 
   const onSubmit = async (data: FormValues) => {
     // Prevent the function from proceeding if already submitting
-    if (isSubmitting) return;
+    if (isSubmitting) {
+      console.log("Already submitting, skipping duplicate submission");
+      return;
+    }
     
     console.log("onSubmit called with data:", data);
     

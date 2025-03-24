@@ -29,14 +29,18 @@ const EventForm = () => {
     handleReset
   } = useEventForm();
 
-  // Add debugging toast to verify form submission
+  // Prevent default form submission behavior completely
   const handleSubmit = (e: React.FormEvent) => {
-    // Prevent default form submission to avoid page refresh
+    // This is critical - prevent default form submission which causes page refresh
     e.preventDefault();
-    console.log("🔶 Form submission triggered");
+    e.stopPropagation(); // Also stop propagation to be extra safe
     
-    // Verify form is valid before submitting
+    console.log("🔶 Form submission handler triggered");
+    
+    // Get and validate form values
+    const values = form.getValues();
     const isValid = form.formState.isValid;
+    
     console.log("🔶 Form is valid:", isValid);
     console.log("🔶 Form errors:", form.formState.errors);
     
@@ -50,11 +54,9 @@ const EventForm = () => {
     }
     
     // Log current form values
-    const values = form.getValues();
     console.log("🔶 Current form values:", JSON.stringify(values, null, 2));
     
-    // Proceed with form submission
-    // Using onSubmit directly instead of form.handleSubmit to ensure preventDefault is respected
+    // Call the onSubmit function directly with form values
     onSubmit(values);
   };
 
@@ -64,7 +66,7 @@ const EventForm = () => {
         <SuccessMessage onReset={handleReset} />
       ) : (
         <Form {...form}>
-          {/* Use onSubmit instead of form's native submit to prevent refresh */}
+          {/* Use the custom handleSubmit to ensure no page refresh */}
           <form onSubmit={handleSubmit} className="space-y-8">
             <FormHeader submissionError={submissionError} />
 
