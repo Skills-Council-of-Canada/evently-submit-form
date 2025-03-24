@@ -2,18 +2,21 @@
 import { useState, useEffect } from "react";
 
 export function useImageUpload() {
-  // Initialize state from sessionStorage if available
+  // Try to retrieve image from both localStorage and sessionStorage
   const [previewImage, setPreviewImage] = useState<string | null>(() => {
-    const savedImage = sessionStorage.getItem('previewImage');
-    return savedImage || null;
+    const savedImageLocal = localStorage.getItem('previewImage');
+    const savedImageSession = sessionStorage.getItem('previewImage');
+    return savedImageLocal || savedImageSession || null;
   });
 
-  // Save preview image to sessionStorage when it changes
+  // Save preview image to both storage types when it changes
   useEffect(() => {
     if (previewImage) {
       sessionStorage.setItem('previewImage', previewImage);
+      localStorage.setItem('previewImage', previewImage);
     } else {
       sessionStorage.removeItem('previewImage');
+      localStorage.removeItem('previewImage');
     }
   }, [previewImage]);
 
@@ -22,17 +25,24 @@ export function useImageUpload() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewImage(reader.result as string);
+        const result = reader.result as string;
+        setPreviewImage(result);
+        // Save immediately to both storage methods
+        localStorage.setItem('previewImage', result);
+        sessionStorage.setItem('previewImage', result);
       };
       reader.readAsDataURL(file);
     } else {
       setPreviewImage(null);
+      localStorage.removeItem('previewImage');
+      sessionStorage.removeItem('previewImage');
     }
   };
 
   const resetImage = () => {
     setPreviewImage(null);
     sessionStorage.removeItem('previewImage');
+    localStorage.removeItem('previewImage');
   };
 
   return {

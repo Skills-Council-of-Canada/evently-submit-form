@@ -1,4 +1,3 @@
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formSchema, FormValues } from "../schema";
@@ -15,27 +14,45 @@ export function useEventForm() {
   // Add a ref to track submission state to prevent race conditions
   const submissionInProgressRef = useRef(false);
   
+  // Load persisted form values from storage
+  const getSavedFormState = (): Partial<FormValues> => {
+    try {
+      // Try localStorage first, then sessionStorage as fallback
+      const savedState = localStorage.getItem('eventFormState') || 
+                         sessionStorage.getItem('eventFormState');
+      if (savedState) {
+        return JSON.parse(savedState);
+      }
+    } catch (e) {
+      console.error('Error restoring form state:', e);
+    }
+    return {};
+  };
+  
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      eventName: "",
-      description: "",
-      schoolName: "",
-      contactName: "",
-      contactEmail: "",
-      eventLocation: "",
-      estimatedAttendance: "",
-      participants: "",
-      keyHighlights: "",
-      specialGuests: "",
-      notableAchievements: "",
-      imagePermission: false,
-      suggestedCaption: "",
-      contentHighlight: "",
+      ...getSavedFormState(), // Load saved values
+      eventName: getSavedFormState().eventName || "",
+      description: getSavedFormState().description || "",
+      schoolName: getSavedFormState().schoolName || "",
+      contactName: getSavedFormState().contactName || "",
+      contactEmail: getSavedFormState().contactEmail || "",
+      eventLocation: getSavedFormState().eventLocation || "",
+      estimatedAttendance: getSavedFormState().estimatedAttendance || "",
+      participants: getSavedFormState().participants || "",
+      keyHighlights: getSavedFormState().keyHighlights || "",
+      specialGuests: getSavedFormState().specialGuests || "",
+      notableAchievements: getSavedFormState().notableAchievements || "",
+      imagePermission: getSavedFormState().imagePermission || false,
+      suggestedCaption: getSavedFormState().suggestedCaption || "",
+      contentHighlight: getSavedFormState().contentHighlight || "",
     },
     mode: "onChange", // Validate on change to catch errors early
     // Prevent form from resetting on component unmount
     shouldUnregister: false,
+    // Keep form field values after submission
+    shouldKeepValues: true,
   });
 
   const { 
@@ -52,29 +69,65 @@ export function useEventForm() {
     resetSubmission 
   } = useFormSubmission();
 
-  // Effect to preserve form state when navigating away
+  // Save form values to storage whenever they change
   useEffect(() => {
-    // Get form values
-    const formValues = form.getValues();
+    const saveFormState = () => {
+      if (isSuccess) return; // Don't save if form was successfully submitted
+      
+      // Get current form values
+      const formValues = form.getValues();
+      
+      // Save to both storage types for redundancy
+      if (Object.keys(formValues).length > 0) {
+        const formStateJSON = JSON.stringify(formValues);
+        localStorage.setItem('eventFormState', formStateJSON);
+        sessionStorage.setItem('eventFormState', formStateJSON);
+      }
+    };
     
-    // Save to sessionStorage
-    if (Object.keys(formValues).length > 0) {
-      sessionStorage.setItem('eventFormState', JSON.stringify(formValues));
-    }
+    // Save form state every 2 seconds if it's dirty
+    const intervalId = setInterval(() => {
+      if (form.formState.isDirty) {
+        saveFormState();
+      }
+    }, 2000);
     
-    // Load from sessionStorage on mount
-    const savedState = sessionStorage.getItem('eventFormState');
-    if (savedState && !isSuccess) {
-      try {
-        const parsedState = JSON.parse(savedState);
+    // Save immediately when values change
+    const subscription = form.watch(() => {
+      if (form.formState.isDirty) {
+        saveFormState();
+      }
+    });
+    
+    // Also save on beforeunload event
+    const handleBeforeUnload = () => {
+      saveFormState();
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      clearInterval(intervalId);
+      subscription.unsubscribe();
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      saveFormState(); // Save on unmount
+    };
+  }, [form, isSuccess]);
+
+  // Restore form state on mount if needed
+  useEffect(() => {
+    // Only restore if not already successful
+    if (!isSuccess) {
+      const savedState = getSavedFormState();
+      if (Object.keys(savedState).length > 0) {
         // Reset form with saved values
-        Object.keys(parsedState).forEach(key => {
-          if (key !== 'eventImage') { // Skip file inputs as they can't be preserved
-            form.setValue(key as any, parsedState[key]);
+        Object.keys(savedState).forEach(key => {
+          if (key !== 'eventImage') { // Skip file inputs
+            form.setValue(key as any, savedState[key as keyof FormValues], {
+              shouldValidate: true,
+              shouldDirty: false, // Don't mark as dirty when restoring
+            });
           }
         });
-      } catch (e) {
-        console.error('Error restoring form state:', e);
       }
     }
   }, [form, isSuccess]);
@@ -112,7 +165,8 @@ export function useEventForm() {
       
       if (recordId) {
         console.log("✅ Form submitted successfully with record ID:", recordId);
-        // Clear form state in sessionStorage on successful submission
+        // Clear form state in storage on successful submission
+        localStorage.removeItem('eventFormState');
         sessionStorage.removeItem('eventFormState');
         form.reset();
         resetImage();
@@ -141,7 +195,8 @@ export function useEventForm() {
     resetSubmission();
     form.reset();
     resetImage();
-    // Clear form state in sessionStorage
+    // Clear form state in storage
+    localStorage.removeItem('eventFormState');
     sessionStorage.removeItem('eventFormState');
   };
 
