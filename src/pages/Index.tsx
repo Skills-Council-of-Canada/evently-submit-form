@@ -1,10 +1,28 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EventForm from "@/components/event-form/EventForm";
 import BenefitBoxes from "@/components/BenefitBoxes";
 import CollapsibleIntro from "@/components/CollapsibleIntro";
+import { useLocation } from "react-router-dom";
 
 const Index = () => {
+  // Track if component has been mounted before to preserve state
+  const [hasBeenMounted, setHasBeenMounted] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    // Set the flag when the component mounts for the first time
+    if (!hasBeenMounted) {
+      setHasBeenMounted(true);
+      
+      // Store in session storage that the page has been visited
+      sessionStorage.setItem('indexPageVisited', 'true');
+    }
+    
+    // Scroll to top when navigating to this page
+    window.scrollTo(0, 0);
+  }, [hasBeenMounted, location]);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 py-12 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
