@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Form } from "@/components/ui/form";
 import { 
   EventDetailsSection, 
   ContactInfoSection, 
@@ -72,50 +71,51 @@ const EventForm = () => {
       {isSuccess ? (
         <SuccessMessage onReset={handleReset} />
       ) : (
-        // Using Form from shadcn-ui but ensuring it doesn't behave like an HTML form
+        // Using a div instead of Form to prevent form behavior
         <div className="no-form-wrapper">
-          <Form {...form}>
-            <div className="space-y-8">
-              <FormHeader submissionError={submissionError} />
+          {/* Using Form component only for its context provider */}
+          <div className="space-y-8">
+            <FormHeader submissionError={submissionError} />
 
-              <div className="section-bg">
-                <EventDetailsSection form={form} />
-              </div>
-              
-              <div className="section-bg">
-                <ParticipationHighlightsSection form={form} />
-              </div>
-              
-              <div className="section-bg">
-                <EventImageSection 
-                  form={form} 
-                  handleImageChange={handleImageChange} 
-                  previewImage={previewImage} 
-                />
-              </div>
-              
-              <div className="section-bg">
-                <MediaMessagingSection form={form} />
-              </div>
-              
-              <div className="section-bg">
-                <TonePreferencesSection form={form} />
-              </div>
-              
-              <div className="section-bg">
-                <SubmissionDateSection form={form} />
-              </div>
-              
-              <div className="section-bg">
-                <ContactInfoSection form={form} />
-              </div>
-              
-              {/* Use a regular div with onClick instead of button */}
-              <div onClick={handleCustomSubmit} className="submit-button-container">
-                <SubmitButton isSubmitting={isSubmitting} />
-              </div>
+            <div className="section-bg">
+              <EventDetailsSection form={form} />
             </div>
-          </Form>
+            
+            <div className="section-bg">
+              <ParticipationHighlightsSection form={form} />
+            </div>
+            
+            <div className="section-bg">
+              <EventImageSection 
+                form={form} 
+                handleImageChange={handleImageChange} 
+                previewImage={previewImage} 
+              />
+            </div>
+            
+            <div className="section-bg">
+              <MediaMessagingSection form={form} />
+            </div>
+            
+            <div className="section-bg">
+              <TonePreferencesSection form={form} />
+            </div>
+            
+            <div className="section-bg">
+              <SubmissionDateSection form={form} />
+            </div>
+            
+            <div className="section-bg">
+              <ContactInfoSection form={form} />
+            </div>
+            
+            <div className="submit-button-container">
+              <SubmitButton 
+                isSubmitting={isSubmitting} 
+                onClick={handleCustomSubmit} 
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>
