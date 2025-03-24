@@ -1,5 +1,6 @@
 
 import React from "react";
+import { Form } from "@/components/ui/form";
 import { 
   EventDetailsSection, 
   ContactInfoSection, 
@@ -74,48 +75,50 @@ const EventForm = () => {
         // Using a div instead of Form to prevent form behavior
         <div className="no-form-wrapper">
           {/* Using Form component only for its context provider */}
-          <div className="space-y-8">
-            <FormHeader submissionError={submissionError} />
+          <Form {...form}>
+            <div className="space-y-8">
+              <FormHeader submissionError={submissionError} />
 
-            <div className="section-bg">
-              <EventDetailsSection form={form} />
+              <div className="section-bg">
+                <EventDetailsSection form={form} />
+              </div>
+              
+              <div className="section-bg">
+                <ParticipationHighlightsSection form={form} />
+              </div>
+              
+              <div className="section-bg">
+                <EventImageSection 
+                  form={form} 
+                  handleImageChange={handleImageChange} 
+                  previewImage={previewImage} 
+                />
+              </div>
+              
+              <div className="section-bg">
+                <MediaMessagingSection form={form} />
+              </div>
+              
+              <div className="section-bg">
+                <TonePreferencesSection form={form} />
+              </div>
+              
+              <div className="section-bg">
+                <SubmissionDateSection form={form} />
+              </div>
+              
+              <div className="section-bg">
+                <ContactInfoSection form={form} />
+              </div>
+              
+              <div className="submit-button-container">
+                <SubmitButton 
+                  isSubmitting={isSubmitting} 
+                  onClick={handleCustomSubmit} 
+                />
+              </div>
             </div>
-            
-            <div className="section-bg">
-              <ParticipationHighlightsSection form={form} />
-            </div>
-            
-            <div className="section-bg">
-              <EventImageSection 
-                form={form} 
-                handleImageChange={handleImageChange} 
-                previewImage={previewImage} 
-              />
-            </div>
-            
-            <div className="section-bg">
-              <MediaMessagingSection form={form} />
-            </div>
-            
-            <div className="section-bg">
-              <TonePreferencesSection form={form} />
-            </div>
-            
-            <div className="section-bg">
-              <SubmissionDateSection form={form} />
-            </div>
-            
-            <div className="section-bg">
-              <ContactInfoSection form={form} />
-            </div>
-            
-            <div className="submit-button-container">
-              <SubmitButton 
-                isSubmitting={isSubmitting} 
-                onClick={handleCustomSubmit} 
-              />
-            </div>
-          </div>
+          </Form>
         </div>
       )}
     </div>
