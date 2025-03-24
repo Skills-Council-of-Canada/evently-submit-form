@@ -31,6 +31,7 @@ const EventForm = () => {
 
   // Add debugging toast to verify form submission
   const handleSubmit = (e: React.FormEvent) => {
+    // Prevent default form submission to avoid page refresh
     e.preventDefault();
     console.log("🔶 Form submission triggered");
     
