@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { FormValues } from "../schema";
 import { 
@@ -17,11 +17,21 @@ export const EventDetailsSection = ({ form }: { form: UseFormReturn<FormValues> 
       <h2 className="form-subtitle">Event Details</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <EventNameField form={form} />
-        <EventDateField form={form} />
-        <EventLocationField form={form} />
-        <AudienceTypeField form={form} />
-        <EstimatedAttendanceField form={form} />
+        <div className="flex flex-col">
+          <EventNameField form={form} />
+        </div>
+        <div className="flex flex-col">
+          <EventDateField form={form} />
+        </div>
+        <div className="flex flex-col">
+          <EventLocationField form={form} />
+        </div>
+        <div className="flex flex-col">
+          <AudienceTypeField form={form} />
+        </div>
+        <div className="flex flex-col">
+          <EstimatedAttendanceField form={form} />
+        </div>
       </div>
       
       <div className="mt-6">

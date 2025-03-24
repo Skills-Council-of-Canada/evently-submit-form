@@ -15,7 +15,7 @@ export const EventNameField = ({ form }: EventNameFieldProps) => {
       control={form.control}
       name="eventName"
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="flex flex-col">
           <FormLabel aria-required="true">
             Event Name *
           </FormLabel>
