@@ -14,8 +14,8 @@ export const formSchema = z.object({
   estimatedAttendance: z.string().optional(),
   description: z.string().min(10, {
     message: "Description must be at least 10 characters.",
-  }).max(500, {
-    message: "Description cannot exceed 500 characters.",
+  }).max(3000, {
+    message: "Description cannot exceed 3000 characters.",
   }),
   schoolName: z.string().min(3, {
     message: "School name must be at least 3 characters.",

@@ -22,12 +22,12 @@ export const EventDescriptionField = ({ form }: EventDescriptionFieldProps) => {
           <FormControl>
             <Textarea
               placeholder="Provide details about your event..."
-              className="resize-y"
+              className="resize-y min-h-[150px]"
               {...field}
             />
           </FormControl>
           <FormDescription>
-            Describe what the event is about (500 characters max)
+            Describe what the event is about (3000 characters max)
           </FormDescription>
           <FormMessage />
         </FormItem>
