@@ -46,6 +46,7 @@ const EventForm = () => {
         description: "Please check all required fields are filled correctly.",
         variant: "destructive",
       });
+      return; // Stop form submission if invalid
     }
     
     // Log current form values
@@ -53,7 +54,8 @@ const EventForm = () => {
     console.log("🔶 Current form values:", JSON.stringify(values, null, 2));
     
     // Proceed with form submission
-    form.handleSubmit(onSubmit)(e);
+    // Using onSubmit directly instead of form.handleSubmit to ensure preventDefault is respected
+    onSubmit(values);
   };
 
   return (
@@ -62,6 +64,7 @@ const EventForm = () => {
         <SuccessMessage onReset={handleReset} />
       ) : (
         <Form {...form}>
+          {/* Use onSubmit instead of form's native submit to prevent refresh */}
           <form onSubmit={handleSubmit} className="space-y-8">
             <FormHeader submissionError={submissionError} />
 

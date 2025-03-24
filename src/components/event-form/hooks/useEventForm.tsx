@@ -49,14 +49,35 @@ export function useEventForm() {
     
     console.log("onSubmit called with data:", data);
     
-    const recordId = await submitForm(data);
-    
-    if (recordId) {
-      console.log("Form submitted successfully with record ID:", recordId);
-      form.reset();
-      resetImage();
-    } else {
-      console.error("Form submission failed");
+    try {
+      // Validate data against schema before submitting
+      const validationResult = formSchema.safeParse(data);
+      if (!validationResult.success) {
+        console.error("Form validation failed:", validationResult.error);
+        toast({
+          title: "Validation Error",
+          description: "Please check all required fields are filled correctly.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      const recordId = await submitForm(data);
+      
+      if (recordId) {
+        console.log("Form submitted successfully with record ID:", recordId);
+        form.reset();
+        resetImage();
+      } else {
+        console.error("Form submission failed");
+      }
+    } catch (error) {
+      console.error("Error in form submission:", error);
+      toast({
+        title: "Submission Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
