@@ -51,8 +51,6 @@ export function useEventForm() {
     mode: "onChange", // Validate on change to catch errors early
     // Prevent form from resetting on component unmount
     shouldUnregister: false,
-    // Keep form field values after submission
-    shouldKeepValues: true,
   });
 
   const { 
