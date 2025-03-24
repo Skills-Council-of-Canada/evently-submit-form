@@ -19,7 +19,13 @@ interface SubmissionDateSectionProps {
 export const SubmissionDateSection: React.FC<SubmissionDateSectionProps> = ({ form }) => {
   // Set the current date when the component mounts
   React.useEffect(() => {
-    form.setValue("submissionDate", new Date());
+    // Ensure we're setting an actual Date object, not a string
+    const currentDate = new Date();
+    form.setValue("submissionDate", currentDate, { 
+      shouldValidate: true 
+    });
+    
+    console.log("Setting submissionDate as Date object:", currentDate);
   }, [form]);
 
   return (
@@ -29,19 +35,26 @@ export const SubmissionDateSection: React.FC<SubmissionDateSectionProps> = ({ fo
       <FormField
         control={form.control}
         name="submissionDate"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Date of Submission</FormLabel>
-            <FormControl>
-              <Input
-                value={field.value ? format(field.value, "PPP") : ""}
-                readOnly
-                className="bg-gray-50"
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
+        render={({ field }) => {
+          // Ensure we're always working with a Date object
+          const dateValue = field.value instanceof Date ? 
+            field.value : 
+            (typeof field.value === 'string' ? new Date(field.value) : new Date());
+          
+          return (
+            <FormItem>
+              <FormLabel>Date of Submission</FormLabel>
+              <FormControl>
+                <Input
+                  value={format(dateValue, "PPP")}
+                  readOnly
+                  className="bg-gray-50"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          );
+        }}
       />
     </div>
   );

@@ -1,3 +1,4 @@
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formSchema, FormValues } from "../schema";
@@ -19,9 +20,19 @@ export function useEventForm() {
     try {
       // Try localStorage first, then sessionStorage as fallback
       const savedState = localStorage.getItem('eventFormState') || 
-                         sessionStorage.getItem('eventFormState');
+                       sessionStorage.getItem('eventFormState');
       if (savedState) {
-        return JSON.parse(savedState);
+        const parsedState = JSON.parse(savedState);
+        
+        // Convert string dates to Date objects
+        if (parsedState.submissionDate && typeof parsedState.submissionDate === 'string') {
+          parsedState.submissionDate = new Date(parsedState.submissionDate);
+        }
+        if (parsedState.eventDate && typeof parsedState.eventDate === 'string') {
+          parsedState.eventDate = new Date(parsedState.eventDate);
+        }
+        
+        return parsedState;
       }
     } catch (e) {
       console.error('Error restoring form state:', e);
@@ -75,9 +86,12 @@ export function useEventForm() {
       // Get current form values
       const formValues = form.getValues();
       
+      // Ensure proper serialization by handling Date objects
+      const formValuesToSave = { ...formValues };
+      
       // Save to both storage types for redundancy
-      if (Object.keys(formValues).length > 0) {
-        const formStateJSON = JSON.stringify(formValues);
+      if (Object.keys(formValuesToSave).length > 0) {
+        const formStateJSON = JSON.stringify(formValuesToSave);
         localStorage.setItem('eventFormState', formStateJSON);
         sessionStorage.setItem('eventFormState', formStateJSON);
       }
@@ -144,6 +158,11 @@ export function useEventForm() {
     console.log("✅ Starting form submission with data:", JSON.stringify(data, null, 2));
     
     try {
+      // Ensure submissionDate is a Date object before validation
+      if (data.submissionDate && typeof data.submissionDate === 'string') {
+        data.submissionDate = new Date(data.submissionDate);
+      }
+      
       // Validate data against schema before submitting
       const validationResult = formSchema.safeParse(data);
       if (!validationResult.success) {
