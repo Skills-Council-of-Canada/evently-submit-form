@@ -31,6 +31,12 @@ export function useFormSubmission() {
       if (recordId) {
         setIsSuccess(true);
         
+        // Clear any previously stored form data
+        localStorage.removeItem('eventFormState');
+        sessionStorage.removeItem('eventFormState');
+        localStorage.removeItem('previewImage');
+        sessionStorage.removeItem('previewImage');
+        
         toast({
           title: "Event Submitted!",
           description: "Your event has been successfully added to our database.",
@@ -53,6 +59,12 @@ export function useFormSubmission() {
     setIsSuccess(false);
     setSubmissionError(null);
     clearSubmissionStorage();
+    
+    // Clear all form-related localStorage and sessionStorage items
+    localStorage.removeItem('eventFormState');
+    sessionStorage.removeItem('eventFormState');
+    localStorage.removeItem('previewImage');
+    sessionStorage.removeItem('previewImage');
   };
 
   return {

@@ -96,6 +96,9 @@ export function useEventSubmit() {
         console.log("📝 Event submitted successfully with ID:", recordId);
         localStorage.setItem('lastSubmittedRecordId', recordId);
         
+        // Clear the image URL from localStorage to prevent reuse in new submissions
+        localStorage.removeItem('lastUploadedImageUrl');
+        
         return recordId;
       } else {
         console.error("📝 No record ID returned from submitEvent");

@@ -102,7 +102,32 @@ export function useEventForm() {
         console.log("✅ Form submitted successfully with record ID:", recordId);
         // Clear form state in storage on successful submission
         clearStoredFormData();
-        form.reset();
+        
+        // Reset the form with empty values
+        form.reset({
+          eventName: '',
+          eventDate: new Date(),
+          eventTime: '',
+          description: '',
+          schoolName: '',
+          contactName: '',
+          contactEmail: '',
+          audienceType: '',
+          submissionDate: new Date(),
+          // Reset all additional fields
+          eventLocation: '',
+          estimatedAttendance: '',
+          participants: '',
+          keyHighlights: '',
+          specialGuests: '',
+          notableAchievements: '',
+          imagePermission: false,
+          suggestedCaption: '',
+          contentHighlight: '',
+          eventImage: undefined
+        });
+        
+        // Reset the image preview
         resetImage();
       } else {
         console.error("❌ Form submission failed - no record ID returned");
@@ -127,7 +152,31 @@ export function useEventForm() {
   // Handle form reset
   const handleReset = () => {
     resetSubmission();
-    form.reset();
+    
+    // Reset the form with empty values
+    form.reset({
+      eventName: '',
+      eventDate: new Date(),
+      eventTime: '',
+      description: '',
+      schoolName: '',
+      contactName: '',
+      contactEmail: '',
+      audienceType: '',
+      submissionDate: new Date(),
+      // Reset all additional fields
+      eventLocation: '',
+      estimatedAttendance: '',
+      participants: '',
+      keyHighlights: '',
+      specialGuests: '',
+      notableAchievements: '',
+      imagePermission: false,
+      suggestedCaption: '',
+      contentHighlight: '',
+      eventImage: undefined
+    });
+    
     resetImage();
     // Clear form state in storage
     clearStoredFormData();
