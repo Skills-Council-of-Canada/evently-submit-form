@@ -6,12 +6,15 @@ import CollapsibleIntro from "@/components/CollapsibleIntro";
 import { useLocation } from "react-router-dom";
 
 const Index = () => {
-  // Track if component has been mounted before to preserve state
-  const [hasBeenMounted, setHasBeenMounted] = useState(false);
+  // Create a more persistent state approach
+  const [hasBeenMounted, setHasBeenMounted] = useState(() => {
+    // Check session storage on initial render only
+    return sessionStorage.getItem('indexPageVisited') === 'true';
+  });
   const location = useLocation();
 
   useEffect(() => {
-    // Set the flag when the component mounts for the first time
+    // Only run this effect once, when the component first mounts
     if (!hasBeenMounted) {
       setHasBeenMounted(true);
       
@@ -19,10 +22,14 @@ const Index = () => {
       sessionStorage.setItem('indexPageVisited', 'true');
     }
     
-    // Scroll to top when navigating to this page
-    window.scrollTo(0, 0);
-  }, [hasBeenMounted, location]);
+    // Avoid scrolling to top on each render
+    // Only scroll to top when the location path changes
+    if (location.pathname === '/') {
+      window.scrollTo(0, 0);
+    }
+  }, [hasBeenMounted, location.pathname]);
 
+  // Prevent the component from re-rendering unnecessarily
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 py-12 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">

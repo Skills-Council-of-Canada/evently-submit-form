@@ -1,14 +1,26 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
 import { submitEvent, checkEventExists, EventRecord } from "@/services/events";
 import { uploadEventImage } from "@/services/imageService";
 import { FormValues } from "../schema";
 
 export function useFormSubmission() {
+  // Check session storage for any saved submission state on initialization
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(() => {
+    return sessionStorage.getItem('formSubmissionSuccess') === 'true';
+  });
   const [submissionError, setSubmissionError] = useState<string | null>(null);
+
+  // Save submission state to sessionStorage when it changes
+  useEffect(() => {
+    if (isSuccess) {
+      sessionStorage.setItem('formSubmissionSuccess', 'true');
+    } else {
+      sessionStorage.removeItem('formSubmissionSuccess');
+    }
+  }, [isSuccess]);
 
   const submitForm = async (data: FormValues) => {
     console.log("📝 Form submission started with data:", JSON.stringify(data, null, 2));
@@ -99,6 +111,8 @@ export function useFormSubmission() {
   const resetSubmission = () => {
     setIsSuccess(false);
     setSubmissionError(null);
+    // Also clear sessionStorage when resetting
+    sessionStorage.removeItem('formSubmissionSuccess');
   };
 
   return {

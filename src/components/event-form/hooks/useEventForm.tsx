@@ -5,7 +5,7 @@ import { formSchema, FormValues } from "../schema";
 import { useImageUpload } from "./useImageUpload";
 import { useFormSubmission } from "./useFormSubmission";
 import { useToast } from "@/hooks/use-toast";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export function useEventForm() {
   const { toast } = useToast();
@@ -34,6 +34,8 @@ export function useEventForm() {
       contentHighlight: "",
     },
     mode: "onChange", // Validate on change to catch errors early
+    // Prevent form from resetting on component unmount
+    shouldUnregister: false,
   });
 
   const { 
@@ -49,6 +51,33 @@ export function useEventForm() {
     submitForm, 
     resetSubmission 
   } = useFormSubmission();
+
+  // Effect to preserve form state when navigating away
+  useEffect(() => {
+    // Get form values
+    const formValues = form.getValues();
+    
+    // Save to sessionStorage
+    if (Object.keys(formValues).length > 0) {
+      sessionStorage.setItem('eventFormState', JSON.stringify(formValues));
+    }
+    
+    // Load from sessionStorage on mount
+    const savedState = sessionStorage.getItem('eventFormState');
+    if (savedState && !isSuccess) {
+      try {
+        const parsedState = JSON.parse(savedState);
+        // Reset form with saved values
+        Object.keys(parsedState).forEach(key => {
+          if (key !== 'eventImage') { // Skip file inputs as they can't be preserved
+            form.setValue(key as any, parsedState[key]);
+          }
+        });
+      } catch (e) {
+        console.error('Error restoring form state:', e);
+      }
+    }
+  }, [form, isSuccess]);
 
   const onSubmit = async (data: FormValues) => {
     // Triple protection against duplicate submissions using both state and ref
@@ -83,6 +112,8 @@ export function useEventForm() {
       
       if (recordId) {
         console.log("✅ Form submitted successfully with record ID:", recordId);
+        // Clear form state in sessionStorage on successful submission
+        sessionStorage.removeItem('eventFormState');
         form.reset();
         resetImage();
       } else {
@@ -110,6 +141,8 @@ export function useEventForm() {
     resetSubmission();
     form.reset();
     resetImage();
+    // Clear form state in sessionStorage
+    sessionStorage.removeItem('eventFormState');
   };
 
   // Combine local and API submission states

@@ -1,8 +1,21 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function useImageUpload() {
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  // Initialize state from sessionStorage if available
+  const [previewImage, setPreviewImage] = useState<string | null>(() => {
+    const savedImage = sessionStorage.getItem('previewImage');
+    return savedImage || null;
+  });
+
+  // Save preview image to sessionStorage when it changes
+  useEffect(() => {
+    if (previewImage) {
+      sessionStorage.setItem('previewImage', previewImage);
+    } else {
+      sessionStorage.removeItem('previewImage');
+    }
+  }, [previewImage]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -19,6 +32,7 @@ export function useImageUpload() {
 
   const resetImage = () => {
     setPreviewImage(null);
+    sessionStorage.removeItem('previewImage');
   };
 
   return {
