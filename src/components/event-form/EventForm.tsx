@@ -29,35 +29,43 @@ const EventForm = () => {
     handleReset
   } = useEventForm();
 
-  // Prevent default form submission behavior completely
+  // Complete prevention of form submission behavior
   const handleSubmit = (e: React.FormEvent) => {
-    // This is critical - prevent default form submission which causes page refresh
+    // These two lines are critical to prevent page refresh
     e.preventDefault();
-    e.stopPropagation(); // Also stop propagation to be extra safe
+    e.stopPropagation();
     
-    console.log("🔶 Form submission handler triggered");
+    console.log("🚨 Form submission handler triggered - default behavior prevented");
     
-    // Get and validate form values
+    // Get form values
     const values = form.getValues();
     const isValid = form.formState.isValid;
     
-    console.log("🔶 Form is valid:", isValid);
-    console.log("🔶 Form errors:", form.formState.errors);
+    console.log("🚨 Form validation status:", isValid);
     
     if (!isValid) {
+      console.log("🚨 Form validation failed with errors:", form.formState.errors);
       toast({
         title: "Form Validation Error",
         description: "Please check all required fields are filled correctly.",
         variant: "destructive",
       });
-      return; // Stop form submission if invalid
+      return;
     }
     
-    // Log current form values
-    console.log("🔶 Current form values:", JSON.stringify(values, null, 2));
+    console.log("🚨 Form is valid, proceeding with submission");
+    console.log("🚨 Form values:", JSON.stringify(values, null, 2));
     
-    // Call the onSubmit function directly with form values
+    // Call onSubmit directly with the values
     onSubmit(values);
+  };
+
+  // Prevent any possible keydown-related submissions
+  const preventEnterKeySubmission = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
+      console.log("🚨 Enter key pressed in input field - preventing default");
+      e.preventDefault();
+    }
   };
 
   return (
@@ -66,8 +74,8 @@ const EventForm = () => {
         <SuccessMessage onReset={handleReset} />
       ) : (
         <Form {...form}>
-          {/* Use the custom handleSubmit to ensure no page refresh */}
-          <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Use div instead of form to completely avoid native form behavior */}
+          <div className="space-y-8" onKeyDown={preventEnterKeySubmission}>
             <FormHeader submissionError={submissionError} />
 
             <div className="section-bg">
@@ -102,8 +110,11 @@ const EventForm = () => {
               <ContactInfoSection form={form} />
             </div>
             
-            <SubmitButton isSubmitting={isSubmitting} />
-          </form>
+            {/* Use a button with onClick instead of submit type */}
+            <div onClick={handleSubmit}>
+              <SubmitButton isSubmitting={isSubmitting} />
+            </div>
+          </div>
         </Form>
       )}
     </div>
