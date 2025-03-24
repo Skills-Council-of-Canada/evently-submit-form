@@ -4,18 +4,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { formSchema, FormValues } from "../schema";
 import { useImageUpload } from "./useImageUpload";
 import { useFormSubmission } from "./useFormSubmission";
-import { useToast } from "@/hooks/use-toast";
-import { useState, useRef, useEffect } from "react";
+import { useFormPersistence } from "./useFormPersistence";
+import { useFormSubmissionState } from "./useFormSubmissionState";
+import { useFormDefaultValues } from "./useFormDefaultValues";
 
 export function useEventForm() {
-  const { toast } = useToast();
-  // Track if submission is in progress to prevent duplicate submissions
-  const [isSubmitting, setLocalSubmitting] = useState(false);
-  
-  // Add a ref to track submission state to prevent race conditions
-  const submissionInProgressRef = useRef(false);
-  
-  // Load persisted form values from storage
+  // Get form submission state management
+  const {
+    isSubmitting,
+    submissionInProgressRef,
+    validateFormData,
+    setSubmitting,
+    isSubmissionInProgress,
+    toast
+  } = useFormSubmissionState();
+
+  // Get saved form state 
   const getSavedFormState = (): Partial<FormValues> => {
     try {
       // Try localStorage first, then sessionStorage as fallback
@@ -40,36 +44,19 @@ export function useEventForm() {
     return {};
   };
   
+  // Get default values for the form
+  const defaultValues = useFormDefaultValues(getSavedFormState());
+  
+  // Initialize form with default values
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      ...getSavedFormState(), // Load saved values
-      eventName: getSavedFormState().eventName || "",
-      description: getSavedFormState().description || "",
-      schoolName: getSavedFormState().schoolName || "",
-      contactName: getSavedFormState().contactName || "",
-      contactEmail: getSavedFormState().contactEmail || "",
-      eventLocation: getSavedFormState().eventLocation || "",
-      estimatedAttendance: getSavedFormState().estimatedAttendance || "",
-      participants: getSavedFormState().participants || "",
-      keyHighlights: getSavedFormState().keyHighlights || "",
-      specialGuests: getSavedFormState().specialGuests || "",
-      notableAchievements: getSavedFormState().notableAchievements || "",
-      imagePermission: getSavedFormState().imagePermission || false,
-      suggestedCaption: getSavedFormState().suggestedCaption || "",
-      contentHighlight: getSavedFormState().contentHighlight || "",
-    },
+    defaultValues,
     mode: "onChange", // Validate on change to catch errors early
     // Prevent form from resetting on component unmount
     shouldUnregister: false,
   });
 
-  const { 
-    previewImage, 
-    handleImageChange, 
-    resetImage 
-  } = useImageUpload();
-  
+  // Get form submission API
   const { 
     isSubmitting: apiSubmitting, 
     isSuccess, 
@@ -78,102 +65,33 @@ export function useEventForm() {
     resetSubmission 
   } = useFormSubmission();
 
-  // Save form values to storage whenever they change
-  useEffect(() => {
-    const saveFormState = () => {
-      if (isSuccess) return; // Don't save if form was successfully submitted
-      
-      // Get current form values
-      const formValues = form.getValues();
-      
-      // Ensure proper serialization by handling Date objects
-      const formValuesToSave = { ...formValues };
-      
-      // Save to both storage types for redundancy
-      if (Object.keys(formValuesToSave).length > 0) {
-        const formStateJSON = JSON.stringify(formValuesToSave);
-        localStorage.setItem('eventFormState', formStateJSON);
-        sessionStorage.setItem('eventFormState', formStateJSON);
-      }
-    };
-    
-    // Save form state every 2 seconds if it's dirty
-    const intervalId = setInterval(() => {
-      if (form.formState.isDirty) {
-        saveFormState();
-      }
-    }, 2000);
-    
-    // Save immediately when values change
-    const subscription = form.watch(() => {
-      if (form.formState.isDirty) {
-        saveFormState();
-      }
-    });
-    
-    // Also save on beforeunload event
-    const handleBeforeUnload = () => {
-      saveFormState();
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    
-    return () => {
-      clearInterval(intervalId);
-      subscription.unsubscribe();
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      saveFormState(); // Save on unmount
-    };
-  }, [form, isSuccess]);
+  // Setup form persistence
+  const { clearStoredFormData } = useFormPersistence(form, isSuccess);
+  
+  // Setup image upload
+  const { 
+    previewImage, 
+    handleImageChange, 
+    resetImage 
+  } = useImageUpload();
 
-  // Restore form state on mount if needed
-  useEffect(() => {
-    // Only restore if not already successful
-    if (!isSuccess) {
-      const savedState = getSavedFormState();
-      if (Object.keys(savedState).length > 0) {
-        // Reset form with saved values
-        Object.keys(savedState).forEach(key => {
-          if (key !== 'eventImage') { // Skip file inputs
-            form.setValue(key as any, savedState[key as keyof FormValues], {
-              shouldValidate: true,
-              shouldDirty: false, // Don't mark as dirty when restoring
-            });
-          }
-        });
-      }
-    }
-  }, [form, isSuccess]);
-
+  // Handle form submission
   const onSubmit = async (data: FormValues) => {
     // Triple protection against duplicate submissions using both state and ref
-    if (isSubmitting || apiSubmitting || submissionInProgressRef.current) {
+    if (isSubmissionInProgress(apiSubmitting)) {
       console.log("⛔ Submission already in progress, preventing duplicate submission");
       return;
     }
     
     // Set both state and ref
-    setLocalSubmitting(true);
-    submissionInProgressRef.current = true;
+    setSubmitting(true);
     
     console.log("✅ Starting form submission with data:", JSON.stringify(data, null, 2));
     
     try {
-      // Ensure submissionDate is a Date object before validation
-      if (data.submissionDate && typeof data.submissionDate === 'string') {
-        data.submissionDate = new Date(data.submissionDate);
-      }
-      
-      // Validate data against schema before submitting
-      const validationResult = formSchema.safeParse(data);
-      if (!validationResult.success) {
-        console.error("❌ Form validation failed:", validationResult.error);
-        toast({
-          title: "Validation Error",
-          description: "Please check all required fields are filled correctly.",
-          variant: "destructive",
-        });
-        setLocalSubmitting(false);
-        submissionInProgressRef.current = false;
+      // Validate form data
+      if (!validateFormData(data)) {
+        setSubmitting(false);
         return;
       }
       
@@ -183,8 +101,7 @@ export function useEventForm() {
       if (recordId) {
         console.log("✅ Form submitted successfully with record ID:", recordId);
         // Clear form state in storage on successful submission
-        localStorage.removeItem('eventFormState');
-        sessionStorage.removeItem('eventFormState');
+        clearStoredFormData();
         form.reset();
         resetImage();
       } else {
@@ -203,18 +120,17 @@ export function useEventForm() {
         variant: "destructive",
       });
     } finally {
-      setLocalSubmitting(false);
-      submissionInProgressRef.current = false;
+      setSubmitting(false);
     }
   };
 
+  // Handle form reset
   const handleReset = () => {
     resetSubmission();
     form.reset();
     resetImage();
     // Clear form state in storage
-    localStorage.removeItem('eventFormState');
-    sessionStorage.removeItem('eventFormState');
+    clearStoredFormData();
   };
 
   // Combine local and API submission states
